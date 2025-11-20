@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>SONIC Quiz</title>
+<title>Ultra Pro Max Quiz</title>
 
 <style>
 /* GLOBAL */
@@ -13,30 +12,31 @@ body{
   font-family:Poppins, sans-serif;
   background:radial-gradient(circle at top,#000814,#001933 60%,#000814);
   color:#d0e7ff; overflow-x:hidden;
-  min-height:100vh; position:relative;
-  padding:20px;
+  min-height:100vh; position:relative; padding:20px;
 }
-/* Lightning */
+
+/* Lightning Effect */
 .lightning{
   position:absolute; inset:0;
   background:repeating-linear-gradient(120deg,transparent,transparent 20%,rgba(0,195,255,0.04) 21%);
-  animation:flash 3s infinite; z-index:0;
+  animation:flash 3s infinite;
 }
 @keyframes flash{
   0%,90%,100%{opacity:0;}
   50%{opacity:1;}
 }
-/* Title */
+
 h1{
   font-size:2.6rem; text-align:center;
   color:#00eaff; text-shadow:0 0 25px #00eaff;
-  margin-top:20px; z-index:2; position:relative;
+  margin-top:20px;
 }
+
 /* Cards */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px; margin-top:30px; position:relative; z-index:2;
+  gap:20px; margin-top:30px;
 }
 .card{
   background:linear-gradient(145deg,#00182e,#002b55);
@@ -59,25 +59,20 @@ h1{
   position:fixed; inset:0;
   background:rgba(0,0,0,.85);
   display:flex; justify-content:center; align-items:center;
-  z-index:999; opacity:0; visibility:hidden;
-  transition:.4s;
+  opacity:0; visibility:hidden;
+  transition:.4s; z-index:999;
 }
-.popup.active{
-  opacity:1; visibility:visible;
-}
+.popup.active{ opacity:1; visibility:visible; }
 .popup-content{
-  width:90%; max-width:500px;
-  background:#001933;
+  width:90%; max-width:500px; max-height:80vh;
+  overflow-y:auto; background:#001933;
   padding:20px; border-radius:15px;
-  border:2px solid #00eaff;
   box-shadow:0 0 30px rgba(0,238,255,.4);
-  text-align:center; max-height:80vh; overflow-y:auto;
-}
-.popup-content h2{
-  color:#00eaff; text-shadow:0 0 15px #00eaff;
+  border:2px solid #00eaff;
+  text-align:center;
 }
 .links a{
-  display:block; padding:10px; margin:8px 0;
+  display:block; padding:12px; margin:8px 0;
   background:#002244; color:#ccefff;
   border-radius:10px; border:1px solid #00eaff;
   text-decoration:none; transition:.3s;
@@ -89,8 +84,7 @@ h1{
 .close-btn{
   background:#00eaff; color:#00182e;
   padding:10px 20px; border-radius:10px;
-  border:none; margin-top:10px;
-  cursor:pointer; font-weight:bold;
+  border:none; margin-top:10px; cursor:pointer; font-weight:bold;
 }
 
 /* QUIZ */
@@ -102,21 +96,20 @@ h1{
 }
 .option{
   background:#002244; padding:10px; margin:8px 0;
-  border-radius:10px; cursor:pointer;
-  border:1px solid #00eaff;
+  border-radius:10px; cursor:pointer; border:1px solid #00eaff;
 }
-.option:hover{ background:#00eaff; color:#00182e; font-weight:bold; }
+.option:hover{ background:#00eaff; color:#00182e; }
 
 /* RESULT */
 .result{
   background:#001933; padding:20px;
-  border-radius:15px; margin:20px auto;
-  border:2px solid #00eaff; text-align:center;
-  max-width:800px;
-  box-shadow:0 0 30px rgba(0,238,255,.4);
+  border-radius:15px; max-width:800px;
+  margin:20px auto; border:2px solid #00eaff;
+  text-align:center; box-shadow:0 0 30px rgba(0,238,255,.4);
 }
 .correct{ color:#00ff90; }
 .wrong{ color:#ff4e4e; }
+
 </style>
 </head>
 <body>
@@ -127,44 +120,43 @@ h1{
 
 <!-- MAIN GRID -->
 <div class="grid">
-  <div class="card" onclick="openPopup('kriva')"><h3>KRIVA TESTS</h3></div>
+  <div class="card" onclick="openPopup('kriva')">
+    <h3>KRIVA TESTS</h3>
+  </div>
 </div>
 
-<!-- POPUP FIXED -->
+<!-- KRIVA POPUP -->
 <div class="popup" id="popup-kriva">
   <div class="popup-content">
     <h2>📘 KRIVA TESTS</h2>
-    <div class="links">
-<a href="tests/test1/data.json">TEST 1</a>
-</div>
+    <div class="links">Loading...</div>
     <button class="close-btn" onclick="closePopup('popup-kriva')">Close</button>
   </div>
 </div>
 
-<script> 
-/* OPEN POPUP & LOAD TEST LIST */
+<script>
+/* OPEN POPUP → LOAD manifest.json */
 function openPopup(folder){
-  const popup=document.getElementById(`popup-${folder}`);
+  const popup = document.getElementById(`popup-${folder}`);
   popup.classList.add("active");
 
-  const box=popup.querySelector(".links");
-  box.innerHTML="⏳ Loading tests...";
+  const box = popup.querySelector(".links");
+  box.innerHTML = "⏳ Loading...";
 
   fetch(`tests/${folder}/manifest.json`)
-  .then(r=>r.json())
-  .then(list=>{
-    box.innerHTML="";
-    list.tests.forEach((file,i)=>{
-      box.innerHTML += `
-        <a href="#" onclick="loadQuiz('tests/${folder}/${file}')">
-          📒 TEST ${i+1}
-        </a>
-      `;
+    .then(r => r.json())
+    .then(data => {
+      box.innerHTML = "";
+      data.tests.forEach((file,i)=>{
+        box.innerHTML += `
+          <a onclick="loadQuiz('tests/${folder}/${file}')">
+            📘 TEST ${i+1}
+          </a>`;
+      });
+    })
+    .catch(()=>{
+      box.innerHTML = "<p>No tests found.</p>";
     });
-  })
-  .catch(()=>{
-    box.innerHTML="<p>No tests found.</p>";
-  });
 }
 
 function closePopup(id){
@@ -175,32 +167,36 @@ function closePopup(id){
 let QUIZ=[],ANS=[];
 
 function loadQuiz(path){
-  fetch(path).then(r=>r.json()).then(data=>{
-    QUIZ=data.questions;
-    ANS=[];
-    startQuiz();
-  });
+  fetch(path)
+    .then(r=>r.json())
+    .then(data=>{
+      QUIZ = data.questions;
+      ANS = [];
+      startQuiz(data.title);
+    });
 }
 
-function startQuiz(){
-  document.body.innerHTML="";
-  let html=`<div class='quiz-box'><h2>⚡ Quiz</h2>`;
+function startQuiz(title){
+  document.body.innerHTML = `<div class='quiz-box'><h2>${title}</h2>`;
+  let html="";
 
   QUIZ.forEach((q,i)=>{
-    html+=`<div><h3>Q${i+1}. ${q.question}</h3>`;
+    html+=`<h3>Q${i+1}. ${q.question}</h3>`;
     q.options.forEach(op=>{
       html+=`<div class='option' onclick="ANS[${i}]='${op}'">${op}</div>`;
     });
-    html+=`</div><hr>`;
+    html+="<hr>";
   });
 
-  html+=`<button onclick="finish()" style="padding:12px 22px;background:#00eaff;color:#001933;border:none;border-radius:10px;font-weight:bold;">SUBMIT</button></div>`;
+  html+=`<button onclick="finish()" 
+  style="padding:12px 22px;background:#00eaff;color:#001933;border:none;border-radius:10px;font-weight:bold;">SUBMIT</button>`;
 
-  document.body.innerHTML=html;
+  document.body.innerHTML = `<div class='quiz-box'><h2>${title}</h2>${html}</div>`;
 }
 
 function finish(){
   let correct=0,wrong=0;
+
   let html=`<div class='result'><h2>📊 RESULT</h2>`;
 
   QUIZ.forEach((q,i)=>{
@@ -214,9 +210,10 @@ function finish(){
   });
 
   html+=`<h3>✔ Correct: ${correct}</h3>`;
-  html+=`<h3>❌ Wrong: ${wrong}</h3></div>`;
+  html+=`<h3>❌ Wrong: ${wrong}</h3>`;
+  html+=`</div>`;
 
-  document.body.innerHTML=html;
+  document.body.innerHTML = html;
 }
 </script>
 
