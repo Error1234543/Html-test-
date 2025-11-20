@@ -1,5 +1,5 @@
 {
-  "title": "Test 1 - Sample Demo",
+  "title": "KRIVA TEST 1",
   "questions": [
     {
       "question": "Which organelle is known as the powerhouse of the cell?",
@@ -10,7 +10,7 @@
         "Mitochondria",
         "Golgi Body"
       ],
-      "answer": 2
+      "answer": "Mitochondria"
     },
     {
       "question": "Which gas is essential for photosynthesis?",
@@ -21,7 +21,7 @@
         "Nitrogen",
         "Hydrogen"
       ],
-      "answer": 1
+      "answer": "Carbon dioxide"
     }
   ]
 }
