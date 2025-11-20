@@ -1,47 +1,123 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Quiz Tests</title>
+<title>ULTRA PRO MAX • TEST ENGINE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
-    body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
-    h2 { margin-top:40px; }
-    .links a {
-        display:block;
-        padding:10px 15px;
-        margin:8px 0;
-        background:#fff;
-        border-radius:8px;
-        text-decoration:none;
-        font-size:18px;
-        border:1px solid #ddd;
-    }
-    #quiz-box {
-        background:#fff; padding:20px; border-radius:10px; margin-top:20px; display:none;
-    }
-    .option { margin:10px 0; }
+/* ---------------- GLOBAL THEME ---------------- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0a0f24, #11192e, #0e0f18);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* Glass Card */
+.card {
+    width: 90%;
+    max-width: 420px;
+    margin: auto;
+    padding: 25px;
+    margin-top: 40px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.25);
+}
+
+/* Headings */
+h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #00f3ff;
+    text-shadow: 0 0 10px #00eaff;
+}
+
+/* Test Links */
+a.test-btn {
+    display: block;
+    margin: 12px 0;
+    padding: 12px;
+    background: linear-gradient(90deg, #00f2ff, #0051ff);
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    text-align: center;
+    transition: 0.2s;
+}
+a.test-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00eaff;
+}
+
+/* Question Box */
+#quiz-box {
+    display: none;
+    margin-top: 20px;
+}
+
+#q-title {
+    font-size: 20px;
+    margin: 10px 0;
+}
+
+.option {
+    margin: 10px 0;
+    padding: 12px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+}
+
+button {
+    width: 100%;
+    background: linear-gradient(90deg, #ff007b, #ff4d00);
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    color: white;
+    margin-top: 15px;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(255, 0, 107, 0.4);
+    transition: 0.15s;
+}
+button:hover {
+    transform: scale(1.03);
+}
+
+/* Result */
+.result-box {
+    font-size: 18px;
+    text-align: center;
+}
 </style>
 </head>
 
 <body>
 
-<h1>📝 Select Your Test</h1>
+<div class="card" id="home">
+    <h1>🧠 ULTRA PRO MAX TESTS</h1>
 
-<div class="links">
-    <!-- Yaha sirf JSON links rakhna -->
-    <a href="#" onclick="loadTest('tests/test1/data.json')">📝 Test 1 (PHY)</a>
-    <a href="#" onclick="loadTest('tests/test2/data.json')">📝 Test 2 (CHE)</a>
-    <a href="#" onclick="loadTest('tests/test3/data.json')">📝 Test 3 (BIO)</a>
+    <a class="test-btn" href="#" onclick="loadTest('tests/test1/data.json')">📝 TEST 1 (PHY)</a>
+    <a class="test-btn" href="#" onclick="loadTest('tests/test2/data.json')">📝 TEST 2 (CHE)</a>
+    <a class="test-btn" href="#" onclick="loadTest('tests/test3/data.json')">📝 TEST 3 (BIO)</a>
 </div>
 
-
-<div id="quiz-box">
+<div class="card" id="quiz-box">
     <h2 id="q-title"></h2>
     <p id="q-text"></p>
-    <img id="q-img" style="max-width:100%; display:none;">
+    <img id="q-img" style="max-width:100%; border-radius:10px; display:none; margin-top:10px;">
+    
     <div id="options"></div>
-    <button onclick="nextQ()">Next</button>
+    <button onclick="nextQ()">Next →</button>
 </div>
 
 <script>
@@ -49,22 +125,25 @@ let quiz = [];
 let indexQ = 0;
 let userAns = [];
 
-async function loadTest(jsonPath){
-    const res = await fetch(jsonPath);
+/* ------------ Load Test ---------------- */
+async function loadTest(path){
+    const res = await fetch(path);
     const data = await res.json();
     quiz = data.questions;
     indexQ = 0;
     userAns = [];
+
+    document.getElementById("home").style.display = "none";
     document.getElementById("quiz-box").style.display = "block";
     showQ();
 }
 
+/* ------------ Display Question ---------------- */
 function showQ(){
     const Q = quiz[indexQ];
     document.getElementById("q-title").innerText = "Question " + (indexQ+1);
     document.getElementById("q-text").innerText = Q.question;
 
-    // image
     let img = document.getElementById("q-img");
     if(Q.image){
         img.src = Q.image;
@@ -73,18 +152,18 @@ function showQ(){
         img.style.display = "none";
     }
 
-    // options
     let html = "";
     Q.options.forEach((opt, i)=>{
         html += `<div class='option'>
                     <label>
                         <input type='radio' name='opt' value='${i}'> ${opt}
                     </label>
-                </div>`;
+                 </div>`;
     });
     document.getElementById("options").innerHTML = html;
 }
 
+/* ------------ Next Button ---------------- */
 function nextQ(){
     let selected = document.querySelector("input[name='opt']:checked");
     userAns[indexQ] = selected ? Number(selected.value) : -1;
@@ -97,17 +176,23 @@ function nextQ(){
     }
 }
 
+/* ------------ Finish Test ---------------- */
 function finish(){
     let correct = 0;
-    quiz.forEach((q, i)=>{
+
+    quiz.forEach((q,i)=>{
         if(userAns[i] === q.answer) correct++;
     });
 
     document.getElementById("quiz-box").innerHTML = `
-        <h2>Result</h2>
-        <p><b>Total:</b> ${quiz.length}</p>
-        <p><b>Correct:</b> ${correct}</p>
-        <p><b>Wrong:</b> ${quiz.length - correct}</p>
+        <div class='result-box'>
+            <h2>🎉 RESULT</h2>
+            <p><b>Total Questions:</b> ${quiz.length}</p>
+            <p><b>Correct:</b> ${correct}</p>
+            <p><b>Wrong:</b> ${quiz.length - correct}</p>
+            <br>
+            <button onclick="location.reload()">🔁 Try Again</button>
+        </div>
     `;
 }
 </script>
