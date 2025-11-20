@@ -1,402 +1,116 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AKDM Ultra Pro — Test</title>
-
-  <!-- ===== Inline CSS (paste this file as-is into each test folder) ===== -->
-  <style>
-    :root{
-      --bg:#0b1220; --card:#071129; --muted:#9aa4b2; --accent:#7c3aed;
-      --glass: rgba(255,255,255,0.03);
+<meta charset="UTF-8">
+<title>Quiz Tests</title>
+<style>
+    body { font-family: Arial, sans-serif; background:#f5f5f5; padding:20px; }
+    h2 { margin-top:40px; }
+    .links a {
+        display:block;
+        padding:10px 15px;
+        margin:8px 0;
+        background:#fff;
+        border-radius:8px;
+        text-decoration:none;
+        font-size:18px;
+        border:1px solid #ddd;
     }
-    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;}
-    html,body{height:100%;margin:0;background:
-      linear-gradient(180deg,#071026 0%,#081025 60%),var(--bg);color:#e9f4ff}
-    .wrap{max-width:980px;margin:22px auto;padding:18px}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-    h1{font-size:20px;margin:0}
-    .muted{color:var(--muted);font-size:13px}
-
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:18px; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.5);}
-
-    .quiz-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-    .timer{font-weight:600;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.02)}
-    .qtext img{max-width:100%;border-radius:8px;margin-bottom:8px}
-
-    .options{display:flex;flex-direction:column;gap:10px;margin-top:10px}
-    .opt{display:flex;align-items:center;gap:10px;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04); background:transparent; cursor:pointer; text-align:left}
-    .opt span.badge{min-width:28px;text-align:center;font-weight:700}
-    .opt.selected{outline:2px solid var(--accent); background:rgba(124,58,237,0.06)}
-
-    textarea{width:100%;min-height:96px;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.02);color:inherit}
-
-    .controls{display:flex;gap:8px; margin-top:14px}
-    .btn{padding:9px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),#00bcd4);color:white}
-    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.05);color:var(--muted)}
-
-    .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:10px;margin-top:14px;overflow:hidden}
-    .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#00bcd4);transition:width .25s ease}
-
-    .result-list{margin-top:12px}
-    .result-item{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);margin-bottom:8px;background:rgba(255,255,255,0.01)}
-
-    footer{margin-top:16px;color:var(--muted);font-size:13px;text-align:center}
-
-    @media (max-width:640px){
-      .quiz-header{flex-direction:column;align-items:flex-start;gap:8px}
+    #quiz-box {
+        background:#fff; padding:20px; border-radius:10px; margin-top:20px; display:none;
     }
-  </style>
+    .option { margin:10px 0; }
+</style>
 </head>
+
 <body>
-  <main class="wrap">
-    <header>
-      <div>
-        <h1 id="testTitle">Loading test…</h1>
-        <div class="muted" id="testSubtitle">Please wait — data.json is being loaded from this folder.</div>
-      </div>
-      <div style="margin-left:auto">
-        <div class="timer" id="timer">--:--</div>
-      </div>
-    </header>
 
-    <section id="quizCard" class="card" aria-live="polite">
-      <div id="qbox">
-        <!-- question content injected here -->
-      </div>
+<h1>📝 Select Your Test</h1>
 
-      <div class="controls" style="justify-content:space-between">
-        <div>
-          <button id="prevBtn" class="btn ghost">Previous</button>
-          <button id="nextBtn" class="btn ghost">Next</button>
-        </div>
-        <div>
-          <button id="submitBtn" class="btn primary">Submit</button>
-        </div>
-      </div>
+<div class="links">
+    <!-- Yaha sirf JSON links rakhna -->
+    <a href="#" onclick="loadTest('tests/test1/data.json')">📝 Test 1 (PHY)</a>
+    <a href="#" onclick="loadTest('tests/test2/data.json')">📝 Test 2 (CHE)</a>
+    <a href="#" onclick="loadTest('tests/test3/data.json')">📝 Test 3 (BIO)</a>
+</div>
 
-      <div class="progress" aria-hidden="true" title="Progress">
-        <i id="progressBar"></i>
-      </div>
-    </section>
 
-    <section id="resultCard" class="card" style="display:none;">
-      <div id="resultSummary"></div>
-      <div id="resultDetails" class="result-list"></div>
-      <div style="margin-top:12px;">
-        <button id="retryBtn" class="btn ghost">Retry</button>
-        <button id="downloadReport" class="btn primary">Download Report (JSON)</button>
-      </div>
-    </section>
+<div id="quiz-box">
+    <h2 id="q-title"></h2>
+    <p id="q-text"></p>
+    <img id="q-img" style="max-width:100%; display:none;">
+    <div id="options"></div>
+    <button onclick="nextQ()">Next</button>
+</div>
 
-    <footer>Put <code>data.json</code> in the same folder as this file. Images referenced in the JSON should also be placed here.</footer>
-  </main>
+<script>
+let quiz = [];
+let indexQ = 0;
+let userAns = [];
 
-  <!-- ===== Inline JS ===== -->
-  <script>
-  (function(){
-    // Simple but solid quiz engine for folder-based test pages.
-    // This file expects `data.json` in the same folder.
-    // JSON structure example (see template in earlier conversation):
-    // { "title": "Test title", "time_limit_seconds": 300, "questions": [ { "type":"mcq", "question":"...", "options":[...], "answer":0, "image":"img.png" }, { "type":"text", "question":"...", "answer":"photosynthesis" } ] }
+async function loadTest(jsonPath){
+    const res = await fetch(jsonPath);
+    const data = await res.json();
+    quiz = data.questions;
+    indexQ = 0;
+    userAns = [];
+    document.getElementById("quiz-box").style.display = "block";
+    showQ();
+}
 
-    // UI refs
-    const TITLE = document.getElementById('testTitle');
-    const SUB = document.getElementById('testSubtitle');
-    const TIMER = document.getElementById('timer');
-    const QBOX = document.getElementById('qbox');
-    const PREV = document.getElementById('prevBtn');
-    const NEXT = document.getElementById('nextBtn');
-    const SUBMIT = document.getElementById('submitBtn');
-    const PROG = document.getElementById('progressBar');
-    const RESULT_CARD = document.getElementById('resultCard');
-    const RESULT_SUM = document.getElementById('resultSummary');
-    const RESULT_DETAILS = document.getElementById('resultDetails');
-    const RETRY = document.getElementById('retryBtn');
-    const DOWNLOAD_REPORT = document.getElementById('downloadReport');
-    const QUIZ_CARD = document.getElementById('quizCard');
+function showQ(){
+    const Q = quiz[indexQ];
+    document.getElementById("q-title").innerText = "Question " + (indexQ+1);
+    document.getElementById("q-text").innerText = Q.question;
 
-    let data = null;
-    let questions = [];
-    let current = 0;
-    let answers = []; // user responses: for mcq store index, for text store string
-    let timerInterval = null;
-    let timeLeft = 0; // seconds, if >0 then timed test
-
-    // Utility
-    const $ = s => document.querySelector(s);
-
-    function safeHtml(s){
-      if(s === null || s === undefined) return '';
-      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+    // image
+    let img = document.getElementById("q-img");
+    if(Q.image){
+        img.src = Q.image;
+        img.style.display = "block";
+    } else {
+        img.style.display = "none";
     }
 
-    // Load the JSON file from same folder
-    async function loadData(){
-      try{
-        const resp = await fetch('data.json', {cache: 'no-store'});
-        if(!resp.ok) throw new Error('data.json not found or failed to load ('+resp.status+')');
-        const j = await resp.json();
-        return j;
-      }catch(err){
-        alert('Error loading test data: ' + err.message + '\nMake sure data.json exists in the same folder as this index.html');
-        throw err;
-      }
-    }
-
-    // Render question at index idx
-    function renderQuestion(idx){
-      const q = questions[idx];
-      QBOX.innerHTML = ''; // clear
-      // header
-      const head = document.createElement('div');
-      head.className = 'qhead';
-      head.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><div><strong>Question ${idx+1} / ${questions.length}</strong></div><div class="muted">${q.type === 'mcq' ? 'MCQ' : 'Text'}</div></div>`;
-      QBOX.appendChild(head);
-
-      const qtext = document.createElement('div');
-      qtext.className = 'qtext';
-      if(q.image){
-        const img = document.createElement('img');
-        img.src = q.image;
-        img.alt = 'Question image';
-        qtext.appendChild(img);
-      }
-      if(q.question){
-        const p = document.createElement('p');
-        p.style.marginTop = '8px';
-        p.innerHTML = safeHtml(q.question).replace(/\n/g,'<br>');
-        qtext.appendChild(p);
-      }
-      QBOX.appendChild(qtext);
-
-      // options or text area
-      if(q.type === 'mcq'){
-        const opts = document.createElement('div');
-        opts.className = 'options';
-        (q.options || []).forEach((opt, i)=>{
-          const b = document.createElement('div');
-          b.className = 'opt';
-          b.tabIndex = 0;
-          b.dataset.i = i;
-          b.innerHTML = `<span class="badge" style="display:inline-block;width:28px;text-align:center;font-weight:700">${String.fromCharCode(65+i)}</span> ${safeHtml(opt)}`;
-          // click handler
-          b.addEventListener('click', ()=>{
-            answers[idx] = i;
-            // toggle selection UI
-            Array.from(opts.children).forEach(ch => ch.classList.remove('selected'));
-            b.classList.add('selected');
-          });
-          // keyboard activation
-          b.addEventListener('keydown', (ev)=>{
-            if(ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); b.click(); }
-          });
-          opts.appendChild(b);
-        });
-        QBOX.appendChild(opts);
-
-        // restore selection if exists
-        const prevSel = answers[idx];
-        if(typeof prevSel === 'number' && prevSel >= 0){
-          const node = opts.querySelector(`[data-i="${prevSel}"]`);
-          if(node) node.classList.add('selected');
-        }
-      } else {
-        const ta = document.createElement('textarea');
-        ta.placeholder = 'Type your answer here...';
-        ta.value = answers[idx] || '';
-        ta.addEventListener('input', (e)=> answers[idx] = e.target.value);
-        QBOX.appendChild(ta);
-      }
-
-      updateProgress();
-      // enable/disable buttons
-      PREV.disabled = (idx === 0);
-      NEXT.disabled = (idx === questions.length - 1);
-    }
-
-    function updateProgress(){
-      const pct = Math.round(((current+1)/questions.length) * 100);
-      PROG.style.width = pct + '%';
-    }
-
-    // navigation
-    PREV.addEventListener('click', ()=>{
-      if(current > 0){ current--; renderQuestion(current); }
+    // options
+    let html = "";
+    Q.options.forEach((opt, i)=>{
+        html += `<div class='option'>
+                    <label>
+                        <input type='radio' name='opt' value='${i}'> ${opt}
+                    </label>
+                </div>`;
     });
-    NEXT.addEventListener('click', ()=>{
-      if(current < questions.length - 1){ current++; renderQuestion(current); }
+    document.getElementById("options").innerHTML = html;
+}
+
+function nextQ(){
+    let selected = document.querySelector("input[name='opt']:checked");
+    userAns[indexQ] = selected ? Number(selected.value) : -1;
+
+    if(indexQ < quiz.length - 1){
+        indexQ++;
+        showQ();
+    } else {
+        finish();
+    }
+}
+
+function finish(){
+    let correct = 0;
+    quiz.forEach((q, i)=>{
+        if(userAns[i] === q.answer) correct++;
     });
 
-    // submit workflow
-    SUBMIT.addEventListener('click', submitHandler);
-    function submitHandler(){
-      if(!confirm('Submit test?')) return;
-      finishTest();
-    }
+    document.getElementById("quiz-box").innerHTML = `
+        <h2>Result</h2>
+        <p><b>Total:</b> ${quiz.length}</p>
+        <p><b>Correct:</b> ${correct}</p>
+        <p><b>Wrong:</b> ${quiz.length - correct}</p>
+    `;
+}
+</script>
 
-    function finishTest(auto=false){
-      // stop timer
-      if(timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-      // compute result
-      let correct = 0;
-      const details = [];
-      for(let i=0;i<questions.length;i++){
-        const q = questions[i];
-        const user = answers[i];
-        let ok = false;
-        if(q.type === 'mcq'){
-          ok = (typeof user === 'number' && user === q.answer);
-        } else {
-          // basic text match (case-insensitive trim). You can later use fuzzy matching or AI.
-          const a = (user || '').toString().toLowerCase().trim();
-          const b = (q.answer || '').toString().toLowerCase().trim();
-          ok = (a === b && a !== '');
-        }
-        if(ok) correct++;
-        details.push({ index: i+1, ok, question: q.question || '', user: user === undefined ? null : user, correct: q.answer, type: q.type, options: q.options || null });
-      }
-
-      // show result
-      QUIZ_CARD.style.display = 'none';
-      RESULT_CARD.style.display = 'block';
-      RESULT_SUM.innerHTML = `<h2>Result</h2>
-        <p><strong>Score:</strong> ${correct} / ${questions.length}</p>
-        <p class="muted">${auto ? 'Auto-submitted (time up)' : 'Submitted'}</p>`;
-
-      // details
-      RESULT_DETAILS.innerHTML = details.map(d=>{
-        let userView = '<em>Not answered</em>';
-        let correctView = '';
-        if(d.type === 'mcq'){
-          if(d.user === null || d.user === undefined || d.user === -1) userView = '<em>Not answered</em>';
-          else userView = String.fromCharCode(65 + Number(d.user));
-          correctView = String.fromCharCode(65 + Number(d.correct));
-        } else {
-          userView = (d.user === null || d.user === undefined) ? '<em>Not answered</em>' : safeHtml(String(d.user));
-          correctView = safeHtml(String(d.correct || ''));
-        }
-        return `<div class="result-item">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><strong>Q ${d.index}</strong> ${d.ok ? '<span style="color:#16a34a">Correct</span>' : '<span style="color:#ef4444">Wrong</span>'}</div>
-            <div class="muted">${d.type.toUpperCase()}</div>
-          </div>
-          <div style="margin-top:6px"><strong>Your:</strong> ${userView} <br><strong>Answer:</strong> ${correctView}</div>
-        </div>`;
-      }).join('');
-
-      // prepare report (downloadable)
-      const report = { meta: { title: data.title || '', length: questions.length, score: correct }, details };
-      DOWNLOAD_REPORT.onclick = ()=> downloadJSON(report, (data.title||'test-report').replace(/\s+/g,'_') + '.json';
-      // attach retry
-      RETRY.onclick = ()=>{
-        // reset
-        answers = new Array(questions.length).fill(null);
-        current = 0;
-        RESULT_CARD.style.display = 'none';
-        QUIZ_CARD.style.display = 'block';
-        if(data.time_limit_seconds && data.time_limit_seconds > 0){
-          startTimer(data.time_limit_seconds);
-        }
-        renderQuestion(current);
-      };
-    }
-
-    // helper to download JSON
-    function downloadJSON(obj, filename='report.json'){
-      const blob = new Blob([JSON.stringify(obj,null,2)], {type:'application/json'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-
-    // Timer logic
-    function startTimer(seconds){
-      if(timerInterval) clearInterval(timerInterval);
-      timeLeft = seconds;
-      updateTimerDisplay();
-      timerInterval = setInterval(()=>{
-        timeLeft--;
-        updateTimerDisplay();
-        if(timeLeft <= 0){
-          clearInterval(timerInterval);
-          timerInterval = null;
-          // auto submit
-          alert('Time is up — Auto submitting the test.');
-          finishTest(true);
-        }
-      }, 1000);
-    }
-    function updateTimerDisplay(){
-      if(!timeLeft || timeLeft <= 0){ TIMER.textContent = '--:--'; return; }
-      const m = Math.floor(timeLeft/60);
-      const s = timeLeft % 60;
-      TIMER.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-    }
-
-    // Initialization
-    (async function init(){
-      try{
-        data = await loadData();
-        TITLE.textContent = data.title || 'Untitled Test';
-        SUB.textContent = data.subtitle || 'Good luck!';
-        questions = data.questions || [];
-        if(!Array.isArray(questions) || questions.length === 0){
-          QBOX.innerHTML = '<p class="muted">No questions found in data.json.</p>';
-          return;
-        }
-        // init answers array
-        answers = new Array(questions.length).fill(null);
-        // optionally prefill from localStorage (per-folder)
-        try{
-          const key = 'akdm_quiz_' + (data.title || location.pathname);
-          const stored = localStorage.getItem(key);
-          if(stored){
-            const parsed = JSON.parse(stored);
-            if(Array.isArray(parsed) && parsed.length === questions.length){
-              // ask user if they want to restore
-              if(confirm('Restore previous progress for this test?')) answers = parsed;
-            }
-          }
-        }catch(e){}
-        // start timer if present
-        if(data.time_limit_seconds && Number(data.time_limit_seconds) > 0){
-          startTimer(Number(data.time_limit_seconds));
-        } else {
-          TIMER.textContent = '--:--';
-        }
-        // initial render
-        current = 0;
-        renderQuestion(current);
-
-        // auto-save progress to localStorage on unload & periodic
-        window.addEventListener('beforeunload', ()=> {
-          try{
-            const key = 'akdm_quiz_' + (data.title || location.pathname);
-            localStorage.setItem(key, JSON.stringify(answers));
-          }catch(e){}
-        });
-        setInterval(()=>{
-          try{
-            const key = 'akdm_quiz_' + (data.title || location.pathname);
-            localStorage.setItem(key, JSON.stringify(answers));
-          }catch(e){}
-        }, 5000);
-
-      }catch(err){
-        console.error(err);
-        TITLE.textContent = 'Failed to load test';
-        QBOX.innerHTML = '<p class="muted">Unable to load <code>data.json</code>. Put a valid JSON file in the same folder and try again.</p>';
-      }
-    })();
-
-  })();
-  </script>
 </body>
 </html>
