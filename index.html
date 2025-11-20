@@ -15,7 +15,7 @@ body{
   min-height:100vh; position:relative;
   padding:20px;
 }
-/* Lightning Effect */
+/* Lightning */
 .lightning{
   position:absolute; inset:0;
   background:repeating-linear-gradient(120deg,transparent,transparent 20%,rgba(0,195,255,0.04) 21%);
@@ -25,13 +25,12 @@ body{
   0%,90%,100%{opacity:0;}
   50%{opacity:1;}
 }
-/* Logo */
+/* Title */
 h1{
   font-size:2.6rem; text-align:center;
   color:#00eaff; text-shadow:0 0 25px #00eaff;
   margin-top:20px; z-index:2; position:relative;
 }
-
 /* Cards */
 .grid{
   display:grid;
@@ -93,15 +92,12 @@ h1{
   cursor:pointer; font-weight:bold;
 }
 
-/* QUIZ UI */
+/* QUIZ */
 .quiz-box{
   background:#001933; padding:20px;
   border-radius:15px; max-width:800px;
   margin:20px auto; border:2px solid #00eaff;
   box-shadow:0 0 30px rgba(0,238,255,.4);
-}
-.quiz-box h2{
-  color:#00eaff; text-shadow:0 0 12px #00eaff;
 }
 .option{
   background:#002244; padding:10px; margin:8px 0;
@@ -120,7 +116,6 @@ h1{
 }
 .correct{ color:#00ff90; }
 .wrong{ color:#ff4e4e; }
-
 </style>
 </head>
 <body>
@@ -129,93 +124,104 @@ h1{
 
 <h1>⚡ Ultra Pro Max Quiz</h1>
 
-<!-- MAIN GRID -->
+<!-- MAIN GRID (YOUR FOLDERS) -->
 <div class="grid">
-  <div class="card" onclick="openPopup('physics')"><h3>📘 NEET Physics</h3></div>
-  <div class="card" onclick="openPopup('chemistry')"><h3>🧪 NEET Chemistry</h3></div>
-  <div class="card" onclick="openPopup('biology')"><h3>🌿 NEET Biology</h3></div>
-  <div class="card" onclick="openPopup('board')"><h3>📝 STD 12 Board</h3></div>
+  <div class="card" onclick="openPopup('physics')"><h3>📘 Physics</h3></div>
+  <div class="card" onclick="openPopup('chemistry')"><h3>🧪 Chemistry</h3></div>
+  <div class="card" onclick="openPopup('biology')"><h3>🌿 Biology</h3></div>
+  <div class="card" onclick="openPopup('board')"><h3>📝 12th Board</h3></div>
   <div class="card" onclick="openPopup('mock')"><h3>🧩 Mock Tests</h3></div>
   <div class="card" onclick="openPopup('maths')"><h3>📗 Maths</h3></div>
 </div>
 
-<!-- POPUPS -->
-<div class="popup" id="popup-physics"><div class="popup-content"><h2>📘 Physics Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-physics')">Close</button></div></div>
-<div class="popup" id="popup-chemistry"><div class="popup-content"><h2>🧪 Chemistry Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-chemistry')">Close</button></div></div>
-<div class="popup" id="popup-biology"><div class="popup-content"><h2>🌿 Biology Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-biology')">Close</button></div></div>
-<div class="popup" id="popup-board"><div class="popup-content"><h2>📝 Board Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-board')">Close</button></div></div>
+<!-- POPUPS FOR EACH FOLDER -->
+<div class="popup" id="popup-physics"><div class="popup-content"><h2>📘 Physics</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-physics')">Close</button></div></div>
+<div class="popup" id="popup-chemistry"><div class="popup-content"><h2>🧪 Chemistry</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-chemistry')">Close</button></div></div>
+<div class="popup" id="popup-biology"><div class="popup-content"><h2>🌿 Biology</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-biology')">Close</button></div></div>
+<div class="popup" id="popup-board"><div class="popup-content"><h2>📝 Board</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-board')">Close</button></div></div>
 <div class="popup" id="popup-mock"><div class="popup-content"><h2>🧩 Mock Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-mock')">Close</button></div></div>
 <div class="popup" id="popup-maths"><div class="popup-content"><h2>📗 Maths</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-maths')">Close</button></div></div>
 
+
 <script>
-/* POPUP */
-function openPopup(name){
-  document.getElementById("popup-"+name).classList.add("active");
+/* OPEN POPUP AND LIST JSON FILES INSIDE THE FOLDER */
+function openPopup(folder){
+  const popup=document.getElementById(`popup-${folder}`);
+  popup.classList.add("active");
 
-  let box=document.querySelector(`#popup-${name} .links`);
-  box.innerHTML="⏳ Loading...";
+  const box=popup.querySelector(".links");
+  box.innerHTML="⏳ Loading tests...";
 
-  fetch(`tests/${name}/`)
-  .then(r=>r.text())
-  .then(txt=>{
-    let d=new DOMParser().parseFromString(txt,"text/html");
-    let files=[...d.querySelectorAll("a")]
-      .map(a=>a.href.split("/").pop())
-      .filter(f=>f.endsWith(".json"));
+  // GitHub/Netlify folders cannot be listed automatically.
+  // So we use a manifest file that YOU will create.
 
+  fetch(`tests/${folder}/manifest.json`)
+  .then(r=>r.json())
+  .then(list=>{
     box.innerHTML="";
-    files.forEach((f,i)=>{
-      box.innerHTML+=`<a href="#" onclick="loadQuiz('tests/${name}/${f}')">📒 TEST ${i+1}</a>`;
+    list.tests.forEach((file,i)=>{
+      box.innerHTML += `
+        <a href="#" onclick="loadQuiz('tests/${folder}/${file}')">
+          📒 TEST ${i+1}
+        </a>
+      `;
     });
-
-    if(!files.length){ box.innerHTML="<p>No tests found</p>"; }
+  })
+  .catch(()=>{
+    box.innerHTML="<p>No tests found.</p>";
   });
 }
-function closePopup(id){ document.getElementById(id).classList.remove("active"); }
 
-/* QUIZ */
+function closePopup(id){
+  document.getElementById(id).classList.remove("active");
+}
+
+/* QUIZ ENGINE */
 let QUIZ=[],ANS=[];
 
 function loadQuiz(path){
   fetch(path).then(r=>r.json()).then(data=>{
-    QUIZ=data; ANS=[];
-    showQuiz();
+    QUIZ=data.questions;
+    ANS=[];
+    startQuiz();
   });
 }
 
-function showQuiz(){
+function startQuiz(){
   document.body.innerHTML="";
-  let html=`<div class='quiz-box'><h2>⚡ Quiz Started</h2>`;
+  let html=`<div class='quiz-box'><h2>⚡ Quiz</h2>`;
+
   QUIZ.forEach((q,i)=>{
     html+=`<div><h3>Q${i+1}. ${q.question}</h3>`;
     q.options.forEach(op=>{
-      html+=`<div class='option' onclick="select(${i},'${op}')">${op}</div>`;
+      html+=`<div class='option' onclick="ANS[${i}]='${op}'">${op}</div>`;
     });
-    html+="</div><hr>";
+    html+=`</div><hr>`;
   });
+
   html+=`<button onclick="finish()" style="padding:12px 22px;background:#00eaff;color:#001933;border:none;border-radius:10px;font-weight:bold;">SUBMIT</button></div>`;
+
   document.body.innerHTML=html;
 }
 
-function select(i,ans){ ANS[i]=ans; }
-
 function finish(){
   let correct=0,wrong=0;
-  let res=`<div class='result'><h2>📊 RESULT</h2>`;
+  let html=`<div class='result'><h2>📊 RESULT</h2>`;
 
   QUIZ.forEach((q,i)=>{
     if(ANS[i]===q.answer){
       correct++;
-      res+=`<p class='correct'>✔ Q${i+1}: ${q.answer}</p>`;
-    }
-    else{
+      html+=`<p class='correct'>✔ Q${i+1} Correct</p>`;
+    } else {
       wrong++;
-      res+=`<p class='wrong'>✘ Q${i+1} → Correct: ${q.answer}</p>`;
+      html+=`<p class='wrong'>✘ Q${i+1} → Correct Ans: ${q.answer}</p>`;
     }
   });
 
-  res+=`<h3>Correct: ${correct}</h3><h3>Wrong: ${wrong}</h3></div>`;
-  document.body.innerHTML=res;
+  html+=`<h3>✔ Correct: ${correct}</h3>`;
+  html+=`<h3>❌ Wrong: ${wrong}</h3></div>`;
+
+  document.body.innerHTML=html;
 }
 </script>
 
