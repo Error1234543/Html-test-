@@ -1,22 +1,27 @@
 {
-  "title": "Test 1 - Biology",
+  "title": "Test 1 - Sample Demo",
   "questions": [
     {
       "question": "Which organelle is known as the powerhouse of the cell?",
       "image": "",
-      "options": ["Ribosome", "Nucleus", "Mitochondria", "Golgi Body"],
+      "options": [
+        "Ribosome",
+        "Nucleus",
+        "Mitochondria",
+        "Golgi Body"
+      ],
       "answer": 2
     },
     {
-      "question": "DNA stands for?",
+      "question": "Which gas is essential for photosynthesis?",
       "image": "",
       "options": [
-        "Deoxyribonucleic Acid",
-        "Dextroribonucleic Acid",
-        "Dual Nitrogen Acid",
-        "None"
+        "Oxygen",
+        "Carbon dioxide",
+        "Nitrogen",
+        "Hydrogen"
       ],
-      "answer": 0
+      "answer": 1
     }
   ]
 }
