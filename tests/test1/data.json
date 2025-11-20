@@ -1,0 +1,22 @@
+{
+  "title": "Test 1 - Biology",
+  "questions": [
+    {
+      "question": "Which organelle is known as the powerhouse of the cell?",
+      "image": "",
+      "options": ["Ribosome", "Nucleus", "Mitochondria", "Golgi Body"],
+      "answer": 2
+    },
+    {
+      "question": "DNA stands for?",
+      "image": "",
+      "options": [
+        "Deoxyribonucleic Acid",
+        "Dextroribonucleic Acid",
+        "Dual Nitrogen Acid",
+        "None"
+      ],
+      "answer": 0
+    }
+  ]
+}
