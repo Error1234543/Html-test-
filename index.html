@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,34 +125,28 @@ h1{
 
 <h1>⚡ Ultra Pro Max Quiz</h1>
 
-<!-- MAIN GRID (YOUR FOLDERS) -->
+<!-- MAIN GRID -->
 <div class="grid">
   <div class="card" onclick="openPopup('kriva')"><h3>KRIVA TESTS</h3></div>
 </div>
 
-<!-- POPUPS FOR EACH FOLDER -->
-<div class="popup" id="popup-physics"><div class="popup-content"><h2>KRIVA TEST</h2><div class="links">
-<a href="tests/test1/data.json">TEST 1</a>
-</div><button class="close-btn" onclick="closePopup('popup-kriva')">Close</button></div></div>
-
-<div class="popup" id="popup-chemistry"><div class="popup-content"><h2>🧪 Chemistry</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-chemistry')">Close</button></div></div>
-<div class="popup" id="popup-biology"><div class="popup-content"><h2>🌿 Biology</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-biology')">Close</button></div></div>
-<div class="popup" id="popup-board"><div class="popup-content"><h2>📝 Board</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-board')">Close</button></div></div>
-<div class="popup" id="popup-mock"><div class="popup-content"><h2>🧩 Mock Tests</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-mock')">Close</button></div></div>
-<div class="popup" id="popup-maths"><div class="popup-content"><h2>📗 Maths</h2><div class="links"></div><button class="close-btn" onclick="closePopup('popup-maths')">Close</button></div></div>
-
+<!-- POPUP FIXED -->
+<div class="popup" id="popup-kriva">
+  <div class="popup-content">
+    <h2>📘 KRIVA TESTS</h2>
+    <div class="links"></div>
+    <button class="close-btn" onclick="closePopup('popup-kriva')">Close</button>
+  </div>
+</div>
 
 <script>
-/* OPEN POPUP AND LIST JSON FILES INSIDE THE FOLDER */
+/* OPEN POPUP & LOAD TEST LIST */
 function openPopup(folder){
   const popup=document.getElementById(`popup-${folder}`);
   popup.classList.add("active");
 
   const box=popup.querySelector(".links");
   box.innerHTML="⏳ Loading tests...";
-
-  // GitHub/Netlify folders cannot be listed automatically.
-  // So we use a manifest file that YOU will create.
 
   fetch(`tests/${folder}/manifest.json`)
   .then(r=>r.json())
@@ -212,7 +207,7 @@ function finish(){
       html+=`<p class='correct'>✔ Q${i+1} Correct</p>`;
     } else {
       wrong++;
-      html+=`<p class='wrong'>✘ Q${i+1} → Correct Ans: ${q.answer}</p>`;
+      html+=`<p class='wrong'>✘ Q${i+1} → Correct: ${q.answer}</p>`;
     }
   });
 
