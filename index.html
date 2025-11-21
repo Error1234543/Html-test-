@@ -1,79 +1,159 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA TEST LIST</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KRIVA Test</title>
 
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f8;
             margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #0d0d17;
-            color: white;
-        }
-
-        header {
             padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            background: rgba(255,255,255,0.07);
         }
-
         .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
             padding: 20px;
-        }
-
-        .test-card {
-            background: rgba(255,255,255,0.10);
-            padding: 16px;
             border-radius: 12px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: 0.3s;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
-
-        .test-card:hover {
-            background: rgba(255,255,255,0.18);
-            transform: scale(1.02);
+        .question-box {
+            margin-bottom: 35px;
+            padding: 15px;
+            border-radius: 12px;
+            background: #fafafa;
+            border-left: 6px solid #3498db;
         }
-
-        .test-title {
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            padding: 12px;
             font-size: 18px;
-            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            background: #e9e9e9;
+            transition: 0.2s;
         }
+        .options button:hover {
+            background: #d5d5d5;
+        }
+        .selected {
+            background: #d0ebff !important;
+            border-left: 6px solid #3498db;
+        }
+        .correct {
+            background: #c8f7c5 !important;
+            border-left: 6px solid #27ae60;
+            color: #145a32;
+        }
+        .wrong {
+            background: #f7c5c5 !important;
+            border-left: 6px solid #e74c3c;
+            color: #641e16;
+        }
+        #submit {
+            padding: 15px;
+            width: 100%;
+            font-size: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        #submit:hover {
+            background: #2e86c1;
+        }
+        #result-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .correct-text { color: #27ae60; }
+        .wrong-text { color: #e74c3c; }
     </style>
 </head>
+
 <body>
-
-<header>KRIVA – TEST LIST</header>
-
 <div class="container">
+    <h2 id="title"></h2>
+    <div id="questions"></div>
 
-    <!-- TEST 1 -->
-    <div class="test-card" onclick="openTest('tests/test1/data.json')">
-        <div class="test-title">🔥 TEST 1</div>
-    </div>
+    <button id="submit">Submit Test</button>
 
-    <!-- TEST 2 -->
-    <div class="test-card" onclick="openTest('tests/test2/data.json')">
-        <div class="test-title">🔥 TEST 2</div>
-    </div>
-
-    <!-- TEST 3 -->
-    <div class="test-card" onclick="openTest('tests/test3/data.json')">
-        <div class="test-title">🔥 TEST 3</div>
-    </div>
-
+    <div id="result-box" style="display:none;"></div>
 </div>
 
 <script>
-function openTest(path) {
-    window.location.href = "quiz.html?test=" + path;
-}
+    let userAnswers = {};
+
+    fetch("data.json")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("title").innerText = data.title;
+            let qBox = document.getElementById("questions");
+
+            data.questions.forEach((q, index) => {
+                let qHTML = `
+                <div class="question-box" id="q${index}">
+                    <img src="${q.image}" style="width:100%; border-radius:10px; margin-bottom:15px;">
+                    <div class="options">
+                        ${["A","B","C","D"].map(opt => `
+                            <button onclick="selectOption(${index}, '${opt}')"
+                            id="q${index}-${opt}">${opt}</button>
+                        `).join("")}
+                    </div>
+                </div>
+                `;
+                qBox.innerHTML += qHTML;
+            });
+
+            window.correctAnswers = data.questions.map(q => q.answer);
+        });
+
+    function selectOption(qIndex, opt) {
+        userAnswers[qIndex] = opt;
+
+        ["A","B","C","D"].forEach(o => {
+            document.getElementById(`q${qIndex}-${o}`).classList.remove("selected");
+        });
+
+        document.getElementById(`q${qIndex}-${opt}`).classList.add("selected");
+    }
+
+    document.getElementById("submit").onclick = function () {
+        let correct = 0;
+        let wrong = 0;
+
+        correctAnswers.forEach((ans, index) => {
+            let user = userAnswers[index];
+
+            if (user === ans) {
+                correct++;
+                document.getElementById(`q${index}-${ans}`).classList.add("correct");
+            } else {
+                wrong++;
+                if (user) {
+                    document.getElementById(`q${index}-${user}`).classList.add("wrong");
+                }
+                document.getElementById(`q${index}-${ans}`).classList.add("correct");
+            }
+        });
+
+        document.getElementById("result-box").style.display = "block";
+        document.getElementById("result-box").innerHTML = `
+            <h3>Result</h3>
+            <p class="correct-text"><b>Correct:</b> ${correct}</p>
+            <p class="wrong-text"><b>Wrong:</b> ${wrong}</p>
+        `;
+    };
 </script>
 
 </body>
