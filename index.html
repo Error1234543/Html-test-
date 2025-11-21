@@ -1,64 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Portal</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .test-list {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 0;
-      list-style: none;
-    }
-    .test-list li {
-      background: #fff;
-      margin: 10px 0;
-      padding: 15px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .test-list li:hover {
-      background: #e0f7fa;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>KRIVA TESTS</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 20px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ccc;
+}
+.card:hover {
+  background: #e7f1ff;
+}
+.popup {
+  display: none;
+  position: fixed;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+}
+.popup-content {
+  background: white;
+  width: 90%; max-width: 400px;
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 10px;
+}
+.links a {
+  display: block;
+  background: #007bff;
+  padding: 12px;
+  margin: 10px 0;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  text-decoration: none;
+}
+</style>
+
+<script>
+function openPopup(id) {
+  document.getElementById("popup-" + id).style.display = "block";
+}
+function closePopup(id) {
+  document.getElementById(id).style.display = "none";
+}
+</script>
 </head>
+
 <body>
 
-  <h1>Select a Test</h1>
-  <ul class="test-list" id="testList"></ul>
+<h1>📘 KRIVA TESTS</h1>
 
-  <script>
-    // List of test JSON paths
-    const tests = [
-      { name: "TEST 1", path: "tests/TEST1/data.json" },
-      { name: "TEST 2", path: "tests/TEST2/data.json" },
-      { name: "TEST 3", path: "tests/TEST3/data.json" }
-    ];
+<div class="grid">
+  <div class="card" onclick="openPopup('kriva')">KRIVA TEST LIST</div>
+</div>
 
-    const testList = document.getElementById('testList');
+<!-- POPUP -->
+<div class="popup" id="popup-kriva">
+  <div class="popup-content">
+    <h2>Available Tests</h2>
 
-    // Load test list dynamically
-    tests.forEach(test => {
-      const li = document.createElement('li');
-      li.textContent = test.name;
-      li.addEventListener('click', () => {
-        // Redirect to quiz page with query param for the test JSON
-        window.location.href = `quiz.html?file=${encodeURIComponent(test.path)}`;
-      });
-      testList.appendChild(li);
-    });
-  </script>
+    <div class="links">
+      <a href="quiz.html?test=tests/TEST1/data.json">TEST 1</a>
+      <a href="quiz.html?test=tests/TEST2/data.json">TEST 2</a>
+      <a href="quiz.html?test=tests/TEST3/data.json">TEST 3</a>
+    </div>
+
+    <button onclick="closePopup('popup-kriva')">Close</button>
+  </div>
+</div>
 
 </body>
 </html>
