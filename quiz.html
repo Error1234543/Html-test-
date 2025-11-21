@@ -1,131 +1,238 @@
-<!DOCTYPE html><html lang="gu">
+<!DOCTYPE html>
+<html lang="gu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA TEST</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f7f9fc;
-            margin: 0;
-            padding: 20px;
-        }
-        .question-box {
-            background: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        .options div {
-            padding: 10px;
-            background: #eef2ff;
-            border-radius: 8px;
-            margin: 6px 0;
-            cursor: pointer;
-        }
-        .selected { background: #cfe0ff !important; }
-        .correct { background: #b2ffb2 !important; }
-        .wrong { background: #ffb2b2 !important; }#result-box {
-        display: none;
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        margin-top: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRIVA – Quiz</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: Poppins, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #4b6bff, #6f8dff, #a5b9ff);
+        min-height: 100vh;
+        color: white;
     }
 
-    button {
-        padding: 12px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    h2.title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: .5px;
+    }
+
+    .question-box {
+        background: rgba(255,255,255,0.15);
+        padding: 18px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        backdrop-filter: blur(6px);
+        border-left: 6px solid rgba(255,255,255,0.5);
+    }
+
+    .qnum {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .qImg {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        border: 2px solid rgba(255,255,255,0.4);
+    }
+
+    .option {
+        padding: 12px;
+        margin: 8px 0;
+        background: #e8e8ff;
+        border-radius: 10px;
+        font-size: 18px;
         cursor: pointer;
-        background: #4a74ff;
+        border: 2px solid transparent;
+        transition: 0.25s ease;
+        color: black;
+    }
+
+    .option:hover {
+        background: #d6d6ff;
+    }
+
+    .option.selected {
+        background: #212a78;
         color: white;
+        border-color: #000;
+        transform: scale(1.02);
+    }
+
+    .option.correct {
+        background: #1ca93d !important;
+        color: white;
+        border-color: #064d16;
+    }
+
+    .option.wrong {
+        background: #d32f2f !important;
+        color: white;
+        border-color: #7a0000;
+    }
+
+    #submitBtn {
+        background: #101b5f;
+        color: white;
+        padding: 15px;
+        border-radius: 14px;
+        border: none;
+        font-size: 20px;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: .25s;
+        font-weight: bold;
+    }
+
+    #submitBtn:hover {
+        background: #0c154b;
+        transform: scale(1.03);
+    }
+
+    .resultBox {
+        background: rgba(0,0,0,0.4);
+        padding: 20px;
+        border-radius: 18px;
+        margin-top: 25px;
+        text-align: center;
+        font-size: 20px;
+        display: none;
     }
 </style>
 
 </head>
-<body><h2>📝 KRIVA TEST – DEMO</h2><div id="quiz-container"></div>
-<button onclick="submitTest()">SUBMIT TEST</button><div id="result-box"></div><script>
-const data = {
-  "title": "KRIVA Demo Test",
-  "questions": [
-    {
-      "no": 1,
-      "question": "પાણીનું રાસાયણિક સૂત્ર શું છે?",
-      "options": ["H2O", "CO2", "O2", "HCl"],
-      "answer": 0
-    },
-    {
-      "no": 2,
-      "question": "માનવ શરીરમાં કયો અંગ લોહી પમ્પ કરે છે?",
-      "options": ["કિડની", "હૃદય", "ફેફસા", "લિવર"],
-      "answer": 1
-    }
-  ]
-};
+<body>
 
-let userAnswers = {};
+<div class="container">
+    <h2 class="title" id="testTitle">Loading Test...</h2>
 
-function loadQuiz(){
-    let box = document.getElementById("quiz-container");
-    box.innerHTML = "";
+    <div id="quizArea"></div>
 
-    data.questions.forEach((q, i) => {
-        let div = document.createElement("div");
-        div.className = "question-box";
+    <button id="submitBtn" onclick="submitTest()">SUBMIT TEST</button>
 
-        div.innerHTML = `
-            <h3>Q${q.no}</h3>
-            <p>${q.question}</p>
-            <div class='options' id='opt-${i}'>
-                ${q.options.map((op, idx) => `<div onclick='select(${i}, ${idx})'>${op}</div>`).join('')}
-            </div>
+    <div class="resultBox" id="resultBox"></div>
+</div>
+
+
+<script>
+// ----------------------------------------------------------------------------
+// LOAD DATA.JSON
+// ----------------------------------------------------------------------------
+
+const urlParams = new URLSearchParams(window.location.search);
+const testPath = urlParams.get("test");
+
+let testData = {};
+let userAnswer = {};
+let submitted = false;
+
+fetch(testPath)
+  .then(res => res.json())
+  .then(data => {
+      testData = data;
+      document.getElementById("testTitle").innerText = data.title;
+      loadQuestions(data.questions);
+  });
+
+
+// ----------------------------------------------------------------------------
+// RENDER QUESTIONS
+// ----------------------------------------------------------------------------
+
+function loadQuestions(qList) {
+    let html = "";
+
+    qList.forEach((q, i) => {
+        html += `
+        <div class="question-box" id="q${i}">
+            <div class="qnum">Q${q.number}</div>
+            <img src="${q.image}" class="qImg">
+
+            <div id="q${i}_A" class="option" onclick="selectOption(${i}, 'A')">A</div>
+            <div id="q${i}_B" class="option" onclick="selectOption(${i}, 'B')">B</div>
+            <div id="q${i}_C" class="option" onclick="selectOption(${i}, 'C')">C</div>
+            <div id="q${i}_D" class="option" onclick="selectOption(${i}, 'D')">D</div>
+        </div>
         `;
-
-        box.appendChild(div);
     });
+
+    document.getElementById("quizArea").innerHTML = html;
 }
 
-function select(qIndex, opIndex){
-    userAnswers[qIndex] = opIndex;
-    let optBox = document.getElementById(`opt-${qIndex}`).children;
-    for(let i=0;i<optBox.length;i++) optBox[i].classList.remove("selected");
-    optBox[opIndex].classList.add("selected");
+
+// ----------------------------------------------------------------------------
+// SELECT OPTION
+// ----------------------------------------------------------------------------
+
+function selectOption(qIndex, optionKey) {
+    if (submitted) return;
+
+    let options = document.querySelectorAll(`#q${qIndex} .option`);
+    options.forEach(o => o.classList.remove("selected"));
+
+    document.getElementById(`q${qIndex}_${optionKey}`).classList.add("selected");
+
+    userAnswer[qIndex] = optionKey;
 }
 
-function submitTest(){
-    let correct = 0, wrong = 0;
 
-    data.questions.forEach((q, i) => {
-        let optBox = document.getElementById(`opt-${i}`).children;
+// ----------------------------------------------------------------------------
+// SUBMIT TEST
+// ----------------------------------------------------------------------------
 
-        for(let j=0;j<optBox.length;j++){
-            optBox[j].classList.remove("correct", "wrong");
-        }
+function submitTest() {
+    submitted = true;
 
-        if(userAnswers[i] == q.answer){
-            correct++;
-            optBox[q.answer].classList.add("correct");
+    let correct = 0;
+    let wrong = 0;
+
+    testData.questions.forEach((q, i) => {
+        let correctAns = q.answer;
+        let selected = userAnswer[i];
+
+        let correctOption = document.getElementById(`q${i}_${correctAns}`);
+
+        // Mark correct ans green
+        correctOption.classList.add("correct");
+
+        if (selected) {
+            let selectedOpt = document.getElementById(`q${i}_${selected}`);
+
+            if (selected === correctAns) {
+                correct++;
+            } else {
+                wrong++;
+                selectedOpt.classList.add("wrong");
+            }
         } else {
             wrong++;
-            if(userAnswers[i] !== undefined)
-                optBox[userAnswers[i]].classList.add("wrong");
-            optBox[q.answer].classList.add("correct");
         }
     });
 
-    document.getElementById("result-box").style.display = "block";
-    document.getElementById("result-box").innerHTML = `
-        ✔ Correct: ${correct}<br>
-        ✘ Wrong: ${wrong}<br>
-        Total: ${data.questions.length}
-    `;
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML =
+        `✔ Correct: ${correct} <br> ✘ Wrong: ${wrong} <br> Total: ${testData.questions.length}`;
 }
+</script>
 
-loadQuiz();
-</script></body>
+</body>
 </html>
