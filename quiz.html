@@ -1,155 +1,139 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA TEST</title>
+<meta charset="UTF-8">
+<title>KRIVA TEST - Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+    body { 
+        font-family: Poppins, sans-serif;
+        background:#eef1ff; margin:0; padding:15px;
+    }
+    .question-box {
+        background:white; border-radius:12px; padding:15px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom:20px;
+    }
+    img { width:100%; border-radius:10px; }
+    .options { display:flex; gap:15px; margin-top:15px; }
+    .opt {
+        flex:1; background:#ddd; padding:15px; border-radius:10px;
+        text-align:center; font-size:20px; cursor:pointer;
+        transition:0.25s;
+    }
+    .opt.selected { background:#4b6bff; color:white; }
+    .opt.correct { background:#14c746 !important; color:white; }
+    .opt.wrong { background:#ff3f3f !important; color:white; }
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #0d0d17;
-            color: white;
-        }
+    #submitBtn {
+        width:100%; background:#4b6bff; color:white;
+        padding:15px; font-size:20px; border:none;
+        border-radius:10px; margin-top:20px;
+    }
 
-        header {
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            background: rgba(255,255,255,0.07);
-            backdrop-filter: blur(10px);
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .question-box {
-            background: rgba(255,255,255,0.07);
-            padding: 18px;
-            margin-bottom: 25px;
-            border-radius: 14px;
-        }
-
-        .q-img {
-            width: 100%;
-            border-radius: 12px;
-        }
-
-        .options label {
-            display: block;
-            background: rgba(255,255,255,0.09);
-            margin: 8px 0;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .options label:hover {
-            background: rgba(255,255,255,0.20);
-        }
-
-        #submitBtn {
-            width: 100%;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 18px;
-            border-radius: 10px;
-            border: none;
-            background: #ff0066;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        #resultBox {
-            background: #111;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 25px;
-            display: none;
-        }
-    </style>
+    .result-box {
+        padding:15px; background:white; border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        margin-top:20px; display:none;
+    }
+</style>
 </head>
+
 <body>
 
-<header id="testTitle">LOADING...</header>
+<h2 id="title"></h2>
+<div id="quiz"></div>
+<button id="submitBtn" onclick="submitTest()">Submit</button>
 
-<div class="container" id="quizArea">Loading Test...</div>
-
-<button id="submitBtn" onclick="submitTest()">SUBMIT TEST</button>
-
-<div id="resultBox"></div>
+<div id="result" class="result-box"></div>
 
 <script>
-let data;
-
-// Read JSON link from URL
+// URL se JSON path get karo
 const urlParams = new URLSearchParams(window.location.search);
-const jsonLink = urlParams.get('test');
+const testPath = urlParams.get("test");
 
-fetch(jsonLink)
-    .then(res => res.json())
-    .then(json => {
-        data = json;
-        document.getElementById("testTitle").innerText = data.title;
-        loadQuestions();
-    })
-    .catch(err => {
-        document.getElementById("quizArea").innerHTML = "Error loading test!";
-    });
+let quizData = [];
+let userAnswers = {};
 
-function loadQuestions() {
+// JSON load
+fetch(testPath)
+  .then(res => res.json())
+  .then(data => {
+      quizData = data.questions;
+      document.getElementById("title").innerText = data.title;
+      loadQuiz();
+  });
+
+// Quiz Display
+function loadQuiz() {
     let html = "";
 
-    data.questions.forEach((q, i) => {
+    quizData.forEach((q, index) => {
         html += `
-        <div class="question-box">
-            <img src="${q.image}" class="q-img">
-
+        <div class="question-box" id="q${index}">
+            <h3>Q${q.number}</h3>
+            <img src="${q.image}" alt="Question Image">
             <div class="options">
-                ${Object.entries(q.options).map(([key,val]) => `
-                    <label>
-                        <input type="radio" name="q${i}" value="${key}"> 
-                        <b>${key}:</b> ${val}
-                    </label>
-                `).join("")}
+                ${renderOption(index, "A")}
+                ${renderOption(index, "B")}
+                ${renderOption(index, "C")}
+                ${renderOption(index, "D")}
             </div>
-        </div>`;
+        </div>
+        `;
     });
 
-    document.getElementById("quizArea").innerHTML = html;
+    document.getElementById("quiz").innerHTML = html;
 }
 
+function renderOption(qIndex, opt) {
+    return `
+      <div class="opt" onclick="selectOption(${qIndex}, '${opt}')" id="q${qIndex}_${opt}">
+          ${opt}
+      </div>
+    `;
+}
+
+// Option select
+function selectOption(qIndex, opt) {
+    userAnswers[qIndex] = opt;
+
+    ["A","B","C","D"].forEach(o => {
+        document.getElementById(`q${qIndex}_${o}`).classList.remove("selected");
+    });
+
+    document.getElementById(`q${qIndex}_${opt}`).classList.add("selected");
+}
+
+// Submit test
 function submitTest() {
-    let score = 0;
-    let wrong = [];
+    let correct = 0;
+    let wrong = 0;
 
-    data.questions.forEach((q, i) => {
-        let selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (!selected) return;
+    quizData.forEach((q, i) => {
+        let correctAns = q.answer;
+        let userAns = userAnswers[i];
 
-        if (selected.value === q.answer) {
-            score++;
+        if (userAns === correctAns) {
+            correct++;
+            document.getElementById(`q${i}_${correctAns}`).classList.add("correct");
         } else {
-            wrong.push(`Q${i+1} ❌ Correct: ${q.answer}`);
+            wrong++;
+            if (userAns)
+                document.getElementById(`q${i}_${userAns}`).classList.add("wrong");
+
+            document.getElementById(`q${i}_${correctAns}`).classList.add("correct");
         }
     });
 
-    let resultHTML = `
-        <h2>Result</h2>
-        <p><b>Score: ${score}/${data.questions.length}</b></p>
-        <hr>
-        ${wrong.length ? wrong.join("<br>") : "<b>All Correct! 🎉</b>"}
+    document.getElementById("result").style.display = "block";
+    document.getElementById("result").innerHTML = `
+        <h3>📊 Result</h3>
+        <p>Correct: ${correct}</p>
+        <p>Wrong: ${wrong}</p>
+        <p>Total: ${quizData.length}</p>
     `;
-
-    document.getElementById("resultBox").innerHTML = resultHTML;
-    document.getElementById("resultBox").style.display = "block";
 }
 </script>
 
