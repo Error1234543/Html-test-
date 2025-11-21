@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA TEST HUB</title>
+    <title>KRIVA TEST LIST</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0a0f, #1a1a2e, #162447);
+            background: #0d0d17;
             color: white;
         }
 
         header {
             padding: 20px;
             text-align: center;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.07);
         }
 
         .container {
@@ -29,48 +28,51 @@
         }
 
         .test-card {
-            background: rgba(255,255,255,0.08);
-            padding: 18px;
-            border-radius: 14px;
+            background: rgba(255,255,255,0.10);
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 15px;
             cursor: pointer;
             transition: 0.3s;
         }
 
         .test-card:hover {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.18);
             transform: scale(1.02);
         }
 
         .test-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-<header>KRIVA ONLINE TESTS</header>
+<header>KRIVA – TEST LIST</header>
 
 <div class="container">
 
-    <div class="test-card" onclick="openTest('tests/test1.json')">
-        <div class="test-title">🔥 TEST 1 — Physics</div>
+    <!-- TEST 1 -->
+    <div class="test-card" onclick="openTest('tests/test1/data.json')">
+        <div class="test-title">🔥 TEST 1</div>
     </div>
 
-    <div class="test-card" onclick="openTest('tests/test2.json')">
-        <div class="test-title">🔥 TEST 2 — Chemistry</div>
+    <!-- TEST 2 -->
+    <div class="test-card" onclick="openTest('tests/test2/data.json')">
+        <div class="test-title">🔥 TEST 2</div>
     </div>
 
-    <div class="test-card" onclick="openTest('tests/test3.json')">
-        <div class="test-title">🔥 TEST 3 — Biology</div>
+    <!-- TEST 3 -->
+    <div class="test-card" onclick="openTest('tests/test3/data.json')">
+        <div class="test-title">🔥 TEST 3</div>
     </div>
 
 </div>
 
 <script>
-function openTest(link) {
-    window.location.href = "quiz.html?test=" + link;
+function openTest(path) {
+    window.location.href = "quiz.html?test=" + path;
 }
 </script>
 
