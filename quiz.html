@@ -97,23 +97,27 @@ img {
 const urlParams = new URLSearchParams(window.location.search);
 const jsonFile = urlParams.get("test");
 
+let quizData = [];
+
+// Load JSON
 fetch(jsonFile)
   .then(res => res.json())
   .then(data => {
+    quizData = data.questions;
     document.getElementById("quiz-title").textContent = data.title;
 
     const container = document.getElementById("quiz-container");
 
-    data.questions.forEach((q, i) => {
+    quizData.forEach((q, i) => {
       let box = document.createElement("div");
       box.className = "question-box";
 
       box.innerHTML = `
-        <h3>${i+1}. ${q.question}</h3>
+        <h3>${q.qno}. ${q.question}</h3>
         ${q.image ? `<img src="${q.image}"><br>` : ""}
-        ${q.options.map(op => `
+        ${q.options.map((op, index) => `
             <label class="option">
-              <input type="radio" name="q${i}" value="${op}"> ${op}
+              <input type="radio" name="q${i}" value="${index+1}"> ${op}
             </label>
         `).join("")}
       `;
@@ -121,34 +125,30 @@ fetch(jsonFile)
     });
   });
 
+// Submit quiz
 function submitQuiz() {
-  fetch(jsonFile)
-    .then(res => res.json())
-    .then(data => {
-      let correct = 0;
-      let wrong = 0;
-      let resultHTML = "<h2>Result:</h2>";
+  let correct = 0;
+  let wrong = 0;
+  let resultHTML = "<h2>Result:</h2>";
 
-      data.questions.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        const userAns = selected ? selected.value : "No Answer";
+  quizData.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    const userAns = selected ? Number(selected.value) : 0;
 
-        if (userAns === q.answer) {
-          correct++;
-          resultHTML += `<p><b>Q${i+1} Correct ✔</b></p>`;
-        } else {
-          wrong++;
-          resultHTML += `<p><b>Q${i+1} Wrong ✘</b> (Right: ${q.answer})</p>`;
-        }
-      });
+    if (userAns === q.answer) {
+      correct++;
+      resultHTML += `<p><b>Q${q.qno} Correct ✔</b></p>`;
+    } else {
+      wrong++;
+      resultHTML += `<p><b>Q${q.qno} Wrong ✘</b> (Right: ${q.options[q.answer-1]})</p>`;
+    }
+  });
 
-      resultHTML += `<h3>Total Correct: ${correct}</h3>`;
-      resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
+  resultHTML += `<h3>Total Correct: ${correct}</h3>`;
+  resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
 
-      document.getElementById("result").innerHTML = resultHTML;
-      // Scroll to result
-      document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
-    });
+  document.getElementById("result").innerHTML = resultHTML;
+  document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
 }
 </script>
 
