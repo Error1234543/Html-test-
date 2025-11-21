@@ -1,78 +1,34 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA TEST LIST</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #0d0d17;
-            color: white;
-        }
-
-        header {
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: 700;
-            background: rgba(255,255,255,0.07);
-        }
-
-        .container {
-            padding: 20px;
-        }
-
-        .test-card {
-            background: rgba(255,255,255,0.10);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .test-card:hover {
-            background: rgba(255,255,255,0.18);
-            transform: scale(1.02);
-        }
-
-        .test-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>KRIVA - Test List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body { font-family: Poppins, sans-serif; background:#f4f4f4; margin:0; padding:20px; }
+    .card {
+        background:white; padding:20px; border-radius:12px;
+        box-shadow:0 4px 12px rgba(0,0,0,0.1);
+        max-width:500px; margin:40px auto; text-align:center;
+    }
+    button {
+        background:#4b6bff; color:white; padding:12px 25px; border:none;
+        border-radius:8px; font-size:18px; cursor:pointer;
+    }
+</style>
 </head>
 <body>
 
-<header>KRIVA – TEST LIST</header>
-
-<div class="container">
-
-    <!-- TEST 1 -->
-    <div class="test-card" onclick="openTest('tests/test1/data.json')">
-        <div class="test-title">🔥 TEST 1</div>
-    </div>
-
-    <!-- TEST 2 -->
-    <div class="test-card" onclick="openTest('tests/test2/data.json')">
-        <div class="test-title">🔥 TEST 2</div>
-    </div>
-
-    <!-- TEST 3 -->
-    <div class="test-card" onclick="openTest('tests/test3/data.json')">
-        <div class="test-title">🔥 TEST 3</div>
-    </div>
-
+<div class="card">
+    <h2>KRIVA Online Test</h2>
+    <p>Start your MCQ Test</p>
+    <button onclick="startTest()">Start Test</button>
 </div>
 
 <script>
-function openTest(path) {
-    window.location.href = "quiz.html?test=" + path;
+function startTest() {
+    // Test JSON load karega
+    window.location.href = "quiz.html?test=tests/test1/data.json";
 }
 </script>
 
