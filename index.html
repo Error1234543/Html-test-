@@ -4,14 +4,9 @@
 <meta charset="UTF-8">
 <title>KRIVA TESTS</title>
 <style>
-/* GOOGLE FONT FOR PREMIUM FEEL */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -20,7 +15,6 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
 h1 {
   text-align: center;
   font-size: 2.8em;
@@ -29,14 +23,12 @@ h1 {
   text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
 
-/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 25px;
 }
 
-/* CARD */
 .card {
   background: linear-gradient(145deg, #ffffff, #dceaff);
   padding: 25px;
@@ -53,7 +45,6 @@ h1 {
   box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
 
-/* POPUP */
 .popup {
   display: none;
   position: fixed;
@@ -110,8 +101,8 @@ button:hover {
   background: #e53935;
   transform: scale(1.05);
 }
-</style>
 
+</style>
 <script>
 function openPopup(id) {
   document.getElementById("popup-" + id).style.display = "block";
@@ -121,7 +112,6 @@ function closePopup(id) {
 }
 </script>
 </head>
-
 <body>
 
 <h1>📘 KRIVA TESTS</h1>
@@ -130,17 +120,14 @@ function closePopup(id) {
   <div class="card" onclick="openPopup('kriva')">KRIVA TEST LIST</div>
 </div>
 
-<!-- POPUP -->
 <div class="popup" id="popup-kriva">
   <div class="popup-content">
     <h2>Available Tests</h2>
-
     <div class="links">
       <a href="quiz.html?test=tests/TEST1/data.json">TEST 1</a>
       <a href="quiz.html?test=tests/TEST2/data.json">TEST 2</a>
       <a href="quiz.html?test=tests/TEST3/data.json">TEST 3</a>
     </div>
-
     <button onclick="closePopup('popup-kriva')">Close</button>
   </div>
 </div>
