@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Quiz</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+.question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+.option { margin: 10px 0; }
+button { padding: 10px 20px; font-size: 18px; }
+.result { background: #e8ffe8; padding: 20px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<h1 id="quiz-title">Loading...</h1>
+<div id="quiz-container"></div>
+<button onclick="submitQuiz()">Submit</button>
+<div id="result"></div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const jsonFile = urlParams.get("test");
+
+fetch(jsonFile)
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("quiz-title").textContent = data.title;
+
+    const container = document.getElementById("quiz-container");
+
+    data.questions.forEach((q, i) => {
+      let box = document.createElement("div");
+      box.className = "question-box";
+
+      box.innerHTML = `
+        <h3>${i+1}. ${q.question}</h3>
+        ${q.image ? `<img src="${q.image}" width="200"><br>` : ""}
+        ${q.options.map((op, index) => `
+            <label class="option">
+              <input type="radio" name="q${i}" value="${op}"> ${op}
+            </label>
+        `).join("")}
+      `;
+      container.appendChild(box);
+    });
+  });
+
+function submitQuiz() {
+  fetch(jsonFile)
+    .then(res => res.json())
+    .then(data => {
+      let correct = 0;
+      let wrong = 0;
+      let resultHTML = "<h2>Result:</h2>";
+
+      data.questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const userAns = selected ? selected.value : "No Answer";
+
+        if (userAns === q.answer) {
+          correct++;
+          resultHTML += `<p><b>Q${i+1} Correct ✔</b></p>`;
+        } else {
+          wrong++;
+          resultHTML += `<p><b>Q${i+1} Wrong ✘</b> (Right: ${q.answer})</p>`;
+        }
+      });
+
+      resultHTML += `<h3>Total Correct: ${correct}</h3>`;
+      resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
+
+      document.getElementById("result").innerHTML = resultHTML;
+    });
+}
+</script>
+
+</body>
+</html>
