@@ -4,51 +4,111 @@
 <meta charset="UTF-8">
 <title>KRIVA TESTS</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f2f2f2;
-  padding: 20px;
+/* GOOGLE FONT FOR PREMIUM FEEL */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
+  padding: 30px;
+  min-height: 100vh;
+}
+
+/* HEADER */
+h1 {
+  text-align: center;
+  font-size: 2.8em;
+  margin-bottom: 40px;
+  color: #0d47a1;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* GRID */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  gap: 25px;
 }
+
+/* CARD */
 .card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  font-size: 20px;
+  background: linear-gradient(145deg, #ffffff, #dceaff);
+  padding: 25px;
+  border-radius: 15px;
+  font-size: 1.2em;
   text-align: center;
   cursor: pointer;
-  box-shadow: 0 0 10px #ccc;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
 }
 .card:hover {
-  background: #e7f1ff;
+  transform: translateY(-8px);
+  background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
+
+/* POPUP */
 .popup {
   display: none;
   position: fixed;
   left: 0; top: 0;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
 }
 .popup-content {
-  background: white;
-  width: 90%; max-width: 400px;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 10px;
+  background: #ffffff;
+  width: 90%; max-width: 450px;
+  margin: 8% auto;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  text-align: center;
+  animation: popupShow 0.3s ease;
 }
+@keyframes popupShow {
+  from { transform: translateY(-50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
 .links a {
   display: block;
-  background: #007bff;
-  padding: 12px;
-  margin: 10px 0;
+  background: #0d47a1;
+  padding: 15px;
+  margin: 12px 0;
   color: white;
+  font-weight: bold;
   text-align: center;
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
+  transition: all 0.3s ease;
+}
+.links a:hover {
+  background: #1976d2;
+  transform: scale(1.05);
+}
+
+button {
+  padding: 12px 25px;
+  border: none;
+  background: #ef5350;
+  color: white;
+  font-size: 1em;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background: #e53935;
+  transform: scale(1.05);
 }
 </style>
 
