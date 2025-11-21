@@ -1,86 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-    h1 { text-align: center; }
-    .question { background: #fff; padding: 15px 20px; margin: 15px 0; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .options button { margin: 5px; padding: 8px 12px; border-radius: 5px; border: none; cursor: pointer; }
-    .options button.correct { background-color: #4caf50; color: #fff; }
-    .options button.wrong { background-color: #f44336; color: #fff; }
-    #result { margin-top: 20px; font-weight: bold; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<title>Quiz</title>
+<style>
+body { font-family: Arial; padding: 20px; }
+.question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+.option { margin: 10px 0; }
+button { padding: 10px 20px; font-size: 18px; }
+.result { background: #e8ffe8; padding: 20px; border-radius: 10px; }
+</style>
 </head>
 <body>
 
-  <h1 id="testTitle">Quiz</h1>
-  <div id="quizContainer"></div>
-  <div id="result"></div>
+<h1 id="quiz-title">Loading...</h1>
+<div id="quiz-container"></div>
+<button onclick="submitQuiz()">Submit</button>
+<div id="result"></div>
 
-  <script>
-    // Get file query param
-    const urlParams = new URLSearchParams(window.location.search);
-    const file = urlParams.get('file');
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const jsonFile = urlParams.get("test");
 
-    if (!file) {
-      document.body.innerHTML = "<h2>No test selected!</h2>";
-      throw new Error("No test selected");
-    }
+fetch(jsonFile)
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("quiz-title").textContent = data.title;
 
-    const quizContainer = document.getElementById('quizContainer');
-    const resultDiv = document.getElementById('result');
+    const container = document.getElementById("quiz-container");
 
-    fetch(file)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('testTitle').textContent = data.title;
+    data.questions.forEach((q, i) => {
+      let box = document.createElement("div");
+      box.className = "question-box";
 
-        data.questions.forEach((q, index) => {
-          const qDiv = document.createElement('div');
-          qDiv.classList.add('question');
+      box.innerHTML = `
+        <h3>${i+1}. ${q.question}</h3>
+        ${q.image ? `<img src="${q.image}" width="200"><br>` : ""}
+        ${q.options.map((op, index) => `
+            <label class="option">
+              <input type="radio" name="q${i}" value="${op}"> ${op}
+            </label>
+        `).join("")}
+      `;
+      container.appendChild(box);
+    });
+  });
 
-          let html = `<p><strong>Q${index+1}:</strong> ${q.question}</p>`;
-          if(q.image) html += `<img src="${q.image}" alt="Question Image" style="max-width:100%; margin-bottom:10px;">`;
+function submitQuiz() {
+  fetch(jsonFile)
+    .then(res => res.json())
+    .then(data => {
+      let correct = 0;
+      let wrong = 0;
+      let resultHTML = "<h2>Result:</h2>";
 
-          html += `<div class="options">`;
-          q.options.forEach(option => {
-            html += `<button onclick="checkAnswer(this, '${q.answer}')">${option}</button>`;
-          });
-          html += `</div>`;
+      data.questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const userAns = selected ? selected.value : "No Answer";
 
-          qDiv.innerHTML = html;
-          quizContainer.appendChild(qDiv);
-        });
+        if (userAns === q.answer) {
+          correct++;
+          resultHTML += `<p><b>Q${i+1} Correct ✔</b></p>`;
+        } else {
+          wrong++;
+          resultHTML += `<p><b>Q${i+1} Wrong ✘</b> (Right: ${q.answer})</p>`;
+        }
       });
 
-    function checkAnswer(btn, correctAnswer) {
-      const buttons = btn.parentElement.querySelectorAll('button');
-      buttons.forEach(b => b.disabled = true);
+      resultHTML += `<h3>Total Correct: ${correct}</h3>`;
+      resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
 
-      if(btn.textContent === correctAnswer) {
-        btn.classList.add('correct');
-      } else {
-        btn.classList.add('wrong');
-        buttons.forEach(b => {
-          if(b.textContent === correctAnswer) b.classList.add('correct');
-        });
-      }
-
-      // Show result
-      const allQuestions = document.querySelectorAll('.question');
-      const answered = Array.from(allQuestions).filter(q => q.querySelectorAll('.correct, .wrong').length > 0).length;
-      if(answered === allQuestions.length) {
-        let score = 0;
-        allQuestions.forEach(q => {
-          if(q.querySelector('.correct').textContent === q.querySelector('.correct').textContent) score++;
-        });
-        resultDiv.textContent = `Quiz Completed! You answered ${answered} questions.`;
-      }
-    }
-  </script>
+      document.getElementById("result").innerHTML = resultHTML;
+    });
+}
+</script>
 
 </body>
 </html>
