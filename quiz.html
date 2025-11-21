@@ -1,154 +1,155 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="gu">
 <head>
-<meta charset="UTF-8">
-<title>Quiz</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRIVA TEST</title>
 
-body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
-  padding: 30px;
-  min-height: 100vh;
-}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-h1 {
-  text-align: center;
-  color: #0d47a1;
-  margin-bottom: 40px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #0d0d17;
+            color: white;
+        }
 
-#quiz-container {
-  max-width: 800px;
-  margin: auto;
-}
+        header {
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(10px);
+        }
 
-.question-box {
-  background: #ffffff;
-  padding: 25px;
-  border-radius: 15px;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.question-box:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
-}
+        .container {
+            padding: 20px;
+        }
 
-.option {
-  display: block;
-  background: #e3f2fd;
-  padding: 12px 15px;
-  margin: 10px 0;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-.option:hover {
-  background: #bbdefb;
-  transform: scale(1.02);
-}
+        .question-box {
+            background: rgba(255,255,255,0.07);
+            padding: 18px;
+            margin-bottom: 25px;
+            border-radius: 14px;
+        }
 
-button {
-  display: block;
-  margin: 30px auto;
-  padding: 15px 30px;
-  font-size: 18px;
-  border: none;
-  border-radius: 12px;
-  background: #0d47a1;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-button:hover {
-  background: #1976d2;
-  transform: scale(1.05);
-}
+        .q-img {
+            width: 100%;
+            border-radius: 12px;
+        }
 
-#result {
-  max-width: 800px;
-  margin: 30px auto;
-  background: #e8ffe8;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
+        .options label {
+            display: block;
+            background: rgba(255,255,255,0.09);
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-img {
-  display: block;
-  margin: 10px 0;
-  max-width: 100%;
-  border-radius: 10px;
-}
-</style>
+        .options label:hover {
+            background: rgba(255,255,255,0.20);
+        }
+
+        #submitBtn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            background: #ff0066;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #resultBox {
+            background: #111;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<h1 id="quiz-title">Loading...</h1>
-<div id="quiz-container"></div>
-<button onclick="submitQuiz()">Submit</button>
-<div id="result"></div>
+<header id="testTitle">LOADING...</header>
+
+<div class="container" id="quizArea">Loading Test...</div>
+
+<button id="submitBtn" onclick="submitTest()">SUBMIT TEST</button>
+
+<div id="resultBox"></div>
 
 <script>
+let data;
+
+// Read JSON link from URL
 const urlParams = new URLSearchParams(window.location.search);
-const jsonFile = urlParams.get("test");
+const jsonLink = urlParams.get('test');
 
-let quizData = [];
-
-// Load JSON
-fetch(jsonFile)
-  .then(res => res.json())
-  .then(data => {
-    quizData = data.questions;
-    document.getElementById("quiz-title").textContent = data.title;
-
-    const container = document.getElementById("quiz-container");
-
-    quizData.forEach((q, i) => {
-      let box = document.createElement("div");
-      box.className = "question-box";
-
-      box.innerHTML = `
-        <h3>${q.qno}. ${q.question}</h3>
-        ${q.image ? `<img src="${q.image}"><br>` : ""}
-        ${q.options.map((op, index) => `
-            <label class="option">
-              <input type="radio" name="q${i}" value="${index+1}"> ${op}
-            </label>
-        `).join("")}
-      `;
-      container.appendChild(box);
+fetch(jsonLink)
+    .then(res => res.json())
+    .then(json => {
+        data = json;
+        document.getElementById("testTitle").innerText = data.title;
+        loadQuestions();
+    })
+    .catch(err => {
+        document.getElementById("quizArea").innerHTML = "Error loading test!";
     });
-  });
 
-// Submit quiz
-function submitQuiz() {
-  let correct = 0;
-  let wrong = 0;
-  let resultHTML = "<h2>Result:</h2>";
+function loadQuestions() {
+    let html = "";
 
-  quizData.forEach((q, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    const userAns = selected ? Number(selected.value) : 0;
+    data.questions.forEach((q, i) => {
+        html += `
+        <div class="question-box">
+            <img src="${q.image}" class="q-img">
 
-    if (userAns === q.answer) {
-      correct++;
-      resultHTML += `<p><b>Q${q.qno} Correct ✔</b></p>`;
-    } else {
-      wrong++;
-      resultHTML += `<p><b>Q${q.qno} Wrong ✘</b> (Right: ${q.options[q.answer-1]})</p>`;
-    }
-  });
+            <div class="options">
+                ${Object.entries(q.options).map(([key,val]) => `
+                    <label>
+                        <input type="radio" name="q${i}" value="${key}"> 
+                        <b>${key}:</b> ${val}
+                    </label>
+                `).join("")}
+            </div>
+        </div>`;
+    });
 
-  resultHTML += `<h3>Total Correct: ${correct}</h3>`;
-  resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
+    document.getElementById("quizArea").innerHTML = html;
+}
 
-  document.getElementById("result").innerHTML = resultHTML;
-  document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+function submitTest() {
+    let score = 0;
+    let wrong = [];
+
+    data.questions.forEach((q, i) => {
+        let selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (!selected) return;
+
+        if (selected.value === q.answer) {
+            score++;
+        } else {
+            wrong.push(`Q${i+1} ❌ Correct: ${q.answer}`);
+        }
+    });
+
+    let resultHTML = `
+        <h2>Result</h2>
+        <p><b>Score: ${score}/${data.questions.length}</b></p>
+        <hr>
+        ${wrong.length ? wrong.join("<br>") : "<b>All Correct! 🎉</b>"}
+    `;
+
+    document.getElementById("resultBox").innerHTML = resultHTML;
+    document.getElementById("resultBox").style.display = "block";
 }
 </script>
 
