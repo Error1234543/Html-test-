@@ -1,141 +1,131 @@
-<!DOCTYPE html>
-<html lang="gu">
+<!DOCTYPE html><html lang="gu">
 <head>
-<meta charset="UTF-8">
-<title>KRIVA TEST - Quiz</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRIVA TEST</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+        .question-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .options div {
+            padding: 10px;
+            background: #eef2ff;
+            border-radius: 8px;
+            margin: 6px 0;
+            cursor: pointer;
+        }
+        .selected { background: #cfe0ff !important; }
+        .correct { background: #b2ffb2 !important; }
+        .wrong { background: #ffb2b2 !important; }#result-box {
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
 
-<style>
-    body { 
-        font-family: Poppins, sans-serif;
-        background:#eef1ff; margin:0; padding:15px;
-    }
-    .question-box {
-        background:white; border-radius:12px; padding:15px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.1);
-        margin-bottom:20px;
-    }
-    img { width:100%; border-radius:10px; }
-    .options { display:flex; gap:15px; margin-top:15px; }
-    .opt {
-        flex:1; background:#ddd; padding:15px; border-radius:10px;
-        text-align:center; font-size:20px; cursor:pointer;
-        transition:0.25s;
-    }
-    .opt.selected { background:#4b6bff; color:white; }
-    .opt.correct { background:#14c746 !important; color:white; }
-    .opt.wrong { background:#ff3f3f !important; color:white; }
-
-    #submitBtn {
-        width:100%; background:#4b6bff; color:white;
-        padding:15px; font-size:20px; border:none;
-        border-radius:10px; margin-top:20px;
-    }
-
-    .result-box {
-        padding:15px; background:white; border-radius:12px;
-        box-shadow:0 4px 12px rgba(0,0,0,0.1);
-        margin-top:20px; display:none;
+    button {
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #4a74ff;
+        color: white;
     }
 </style>
+
 </head>
+<body><h2>📝 KRIVA TEST – DEMO</h2><div id="quiz-container"></div>
+<button onclick="submitTest()">SUBMIT TEST</button><div id="result-box"></div><script>
+const data = {
+  "title": "KRIVA Demo Test",
+  "questions": [
+    {
+      "no": 1,
+      "question": "પાણીનું રાસાયણિક સૂત્ર શું છે?",
+      "options": ["H2O", "CO2", "O2", "HCl"],
+      "answer": 0
+    },
+    {
+      "no": 2,
+      "question": "માનવ શરીરમાં કયો અંગ લોહી પમ્પ કરે છે?",
+      "options": ["કિડની", "હૃદય", "ફેફસા", "લિવર"],
+      "answer": 1
+    }
+  ]
+};
 
-<body>
-
-<h2 id="title"></h2>
-<div id="quiz"></div>
-<button id="submitBtn" onclick="submitTest()">Submit</button>
-
-<div id="result" class="result-box"></div>
-
-<script>
-// URL se JSON path get karo
-const urlParams = new URLSearchParams(window.location.search);
-const testPath = urlParams.get("test");
-
-let quizData = [];
 let userAnswers = {};
 
-// JSON load
-fetch(testPath)
-  .then(res => res.json())
-  .then(data => {
-      quizData = data.questions;
-      document.getElementById("title").innerText = data.title;
-      loadQuiz();
-  });
+function loadQuiz(){
+    let box = document.getElementById("quiz-container");
+    box.innerHTML = "";
 
-// Quiz Display
-function loadQuiz() {
-    let html = "";
+    data.questions.forEach((q, i) => {
+        let div = document.createElement("div");
+        div.className = "question-box";
 
-    quizData.forEach((q, index) => {
-        html += `
-        <div class="question-box" id="q${index}">
-            <h3>Q${q.number}</h3>
-            <img src="${q.image}" alt="Question Image">
-            <div class="options">
-                ${renderOption(index, "A")}
-                ${renderOption(index, "B")}
-                ${renderOption(index, "C")}
-                ${renderOption(index, "D")}
+        div.innerHTML = `
+            <h3>Q${q.no}</h3>
+            <p>${q.question}</p>
+            <div class='options' id='opt-${i}'>
+                ${q.options.map((op, idx) => `<div onclick='select(${i}, ${idx})'>${op}</div>`).join('')}
             </div>
-        </div>
         `;
+
+        box.appendChild(div);
     });
-
-    document.getElementById("quiz").innerHTML = html;
 }
 
-function renderOption(qIndex, opt) {
-    return `
-      <div class="opt" onclick="selectOption(${qIndex}, '${opt}')" id="q${qIndex}_${opt}">
-          ${opt}
-      </div>
-    `;
+function select(qIndex, opIndex){
+    userAnswers[qIndex] = opIndex;
+    let optBox = document.getElementById(`opt-${qIndex}`).children;
+    for(let i=0;i<optBox.length;i++) optBox[i].classList.remove("selected");
+    optBox[opIndex].classList.add("selected");
 }
 
-// Option select
-function selectOption(qIndex, opt) {
-    userAnswers[qIndex] = opt;
+function submitTest(){
+    let correct = 0, wrong = 0;
 
-    ["A","B","C","D"].forEach(o => {
-        document.getElementById(`q${qIndex}_${o}`).classList.remove("selected");
-    });
+    data.questions.forEach((q, i) => {
+        let optBox = document.getElementById(`opt-${i}`).children;
 
-    document.getElementById(`q${qIndex}_${opt}`).classList.add("selected");
-}
+        for(let j=0;j<optBox.length;j++){
+            optBox[j].classList.remove("correct", "wrong");
+        }
 
-// Submit test
-function submitTest() {
-    let correct = 0;
-    let wrong = 0;
-
-    quizData.forEach((q, i) => {
-        let correctAns = q.answer;
-        let userAns = userAnswers[i];
-
-        if (userAns === correctAns) {
+        if(userAnswers[i] == q.answer){
             correct++;
-            document.getElementById(`q${i}_${correctAns}`).classList.add("correct");
+            optBox[q.answer].classList.add("correct");
         } else {
             wrong++;
-            if (userAns)
-                document.getElementById(`q${i}_${userAns}`).classList.add("wrong");
-
-            document.getElementById(`q${i}_${correctAns}`).classList.add("correct");
+            if(userAnswers[i] !== undefined)
+                optBox[userAnswers[i]].classList.add("wrong");
+            optBox[q.answer].classList.add("correct");
         }
     });
 
-    document.getElementById("result").style.display = "block";
-    document.getElementById("result").innerHTML = `
-        <h3>📊 Result</h3>
-        <p>Correct: ${correct}</p>
-        <p>Wrong: ${wrong}</p>
-        <p>Total: ${quizData.length}</p>
+    document.getElementById("result-box").style.display = "block";
+    document.getElementById("result-box").innerHTML = `
+        ✔ Correct: ${correct}<br>
+        ✘ Wrong: ${wrong}<br>
+        Total: ${data.questions.length}
     `;
 }
-</script>
 
-</body>
+loadQuiz();
+</script></body>
 </html>
