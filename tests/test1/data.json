@@ -3,32 +3,14 @@
   "questions": [
     {
       "image": "https://i.imgur.com/7Y2a3gS.png",
-      "options": {
-        "A": "સેલ દિવાલ",
-        "B": "માઇટોકોન્ડ્રીયા",
-        "C": "રાઇબોઝોમ",
-        "D": "વેક્યૂઓલ"
-      },
       "answer": "B"
     },
     {
       "image": "https://i.imgur.com/ZQO58Mu.jpeg",
-      "options": {
-        "A": "ફોટોસિંથેસિસ",
-        "B": "શ્વસન",
-        "C": "પ્રસાર",
-        "D": "ટ્રાન્સપિરેશન"
-      },
       "answer": "A"
     },
     {
       "image": "https://i.imgur.com/wt7q6FJ.jpeg",
-      "options": {
-        "A": "DNA",
-        "B": "RNA",
-        "C": "Carbohydrate",
-        "D": "Protein"
-      },
       "answer": "D"
     }
   ]
