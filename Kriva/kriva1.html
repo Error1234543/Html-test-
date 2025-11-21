@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KRIVA Online Education - Full NEET Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Hind+Vadodara:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --accent: #818cf8;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --phy: #3b82f6;
+            --chem: #8b5cf6;
+            --bio: #22c55e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Vadodara', sans-serif; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Container Styles */
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- SCREEN 1: WELCOME / START --- */
+        #start-screen {
+            padding: 40px;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-area {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .test-title {
+            font-size: 1.4rem;
+            margin-bottom: 30px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .rules-box {
+            background: #eef2ff;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: left;
+            margin-bottom: 30px;
+            width: 100%;
+            border-left: 6px solid var(--primary);
+        }
+
+        .rules-box li {
+            margin-bottom: 12px;
+            list-style: none;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.1rem;
+            color: #334155;
+        }
+
+        .rules-box li::before {
+            content: "👉";
+            position: absolute;
+            left: 0;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 18px 60px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+            transition: transform 0.2s;
+            animation: bounce 2s infinite;
+        }
+
+        .start-btn:hover { transform: scale(1.05); }
+
+        /* --- SCREEN 2: QUIZ INTERFACE --- */
+        #quiz-interface {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .quiz-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+.timer-badge {
+            background: rgba(255,255,255,0.25);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .questions-wrapper {
+            padding: 30px;
+            overflow-y: auto;
+            flex: 1;
+            max-height: 70vh;
+        }
+
+        .q-card {
+            background: white;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: box-shadow 0.3s;
+        }
+
+        .q-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .subject-tag {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .tag-phy { background: var(--phy); }
+        .tag-chem { background: var(--chem); }
+        .tag-bio { background: var(--bio); }
+
+        .q-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) { .options-list { grid-template-columns: 1fr; } }
+
+        .opt-label {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            border: 2px solid #e2e8f0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .opt-label:hover { background: #f1f5f9; border-color: #cbd5e1; }
+
+        input[type="radio"] { display: none; }
+        input[type="radio"]:checked + .opt-label {
+            border-color: var(--primary);
+            background: #eef2ff;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .submit-section {
+            padding: 20px;
+            text-align: center;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .submit-final-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* --- RESULT MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-box {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #f0fdf4;
+            border: 8px solid var(--success);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            flex-direction: column;
+        }
+.score-big {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--success);
+            line-height: 1;
+        }
+        
+        .score-label { font-size: 0.9rem; color: #64748b; margin-top: 5px; }
+
+        /* Utility for Result Review */
+        .correct { background: #d1fae5 !important; border-color: #10b981 !important; }
+        .wrong { background: #fee2e2 !important; border-color: #ef4444 !important; }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="start-screen">
+            <div class="logo-area">KRIVA EDUCATION</div>
+            <div class="test-title">NEET Full Syllabus Mock Test (Phy + Chem + Bio)</div>
+            
+            <div class="rules-box">
+                <h3>📜 Instructions:</h3>
+                <ul>
+                    <li>કુલ પ્રશ્નો: 40 (Selected from PDF)</li>
+                    <li>સમય: 45 મિનિટ</li>
+                    <li>વિષયો: Physics, Chemistry, Biology</li>
+                    <li>સાચા જવાબ: +4 માર્ક્સ | ખોટા જવાબ: -1 માર્ક</li>
+                </ul>
+            </div>
+
+            <button class="start-btn" onclick="startQuiz()">START TEST 🚀</button>
+        </div>
+
+        <div id="quiz-interface">
+            <div class="quiz-header">
+                <span>NEET Mock Test 01</span>
+                <span class="timer-badge" id="timer">45:00</span>
+            </div>
+
+            <div class="questions-wrapper" id="questions-container">
+                </div>
+
+            <div class="submit-section">
+                <button class="submit-final-btn" onclick="submitQuiz()">Submit Test ✅</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="result-modal">
+        <div class="result-box">
+            <h2>Test Completed! 🎉</h2>
+            <p style="color: #64748b;">તમારું પરિણામ</p>
+            
+            <div class="score-circle">
+                <div class="score-big" id="final-score">0</div>
+                <div class="score-label">Total Marks</div>
+            </div>
+            
+            <p id="accuracy-text" style="margin-bottom: 20px; font-weight: 600;"></p>
+
+            <button class="submit-final-btn" onclick="closeModal()">Review Answers 📝</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA extracted from your PDF ---
+        // Answers are inferred based on standard NEET syllabus
+        const quizData = [
+            // --- PHYSICS ---
+            { sub: "Physics", q: "1. કોઇ એક પ્રયોગમાં A, B, C અને D ભૌતિક રાશિઓના માપનમાં ઉદભવતી પ્રતિશત ત્રુટિ અનુક્રમે 1%, 2%, 3% અને 4% છે. તો X ના માપનમાં મહત્તમ પ્રતિશત ત્રુટિ શોધો. (જ્યાં X = A²B^(1/2) / C^(1/3)D³)", opt: ["(3/13) %", "16 %", "-10 %", "10 %"], ans: 1 },
+            { sub: "Physics", q: "2. t = 0 સમયે સ્થિર સ્થિતિમાંથી શરૂ કરી, એક નાનો ટૂકડો ઘર્ષણરહિત ઢોળાવ પરથી સરકે છે. Sn / Sn+1 ગુણોત્તર ...... હશે.", opt: ["(2n-1)/2n", "(2n-1)/(2n+1)", "(2n+1)/(2n-1)", "2n/(2n-1)"], ans: 1 },
+            { sub: "Physics", q: "3. મુક્ત પતન કરતા એક પદાર્થ ના પ્રથમ, દ્વિતીય, તૃતીય અને ચોથી સેકન્ડમાં કપાયેલ અંતરોનો ગુણોત્તર .......... હોય છે.", opt: ["1:4:9:16", "1:3:5:7", "1:1:1:1", "1:2:3:4"], ans: 1 },
+            { sub: "Physics", q: "4. ધાતુનો તાર (0.4 ± 0.002) gm દળ, (0.3 ± 0.001) mm ત્રિજ્યા અને (5 ± 0.02) cm લંબાઈ ધરાવે છે. ઘનતાના માપનમાં મહત્તમ પ્રતિશત ત્રુટિ ...% હશે.", opt: ["1.4", "1.2", "1.3", "1.6"], ans: 3 },
+            { sub: "Physics", q: "6. તાપમાન, વોલ્ટેજ સપ્લાયમાં ન ધારેલા ફેરફારોને લીધે માપનમાં ઉદ્ભવતી ત્રુટિઓ ....... છે.", opt: ["અવ્યવસ્થિત ત્રુટિઓ", "સાધનની ત્રુટિઓ", "વ્યક્તિગત ત્રુટિઓ", "લઘુતમ માપ ત્રુટિઓ"], ans: 0 },
+{ sub: "Physics", q: "8. 1' (મિનિટ) ખૂણાનું મૂલ્ય રેડિયનમાં મેળવો.", opt: ["1.75 × 10⁻² rad", "2.91 × 10⁻⁴ rad", "4.85 × 10⁻⁴ rad", "4.80 × 10⁻⁶ rad"], ans: 1 },
+            { sub: "Physics", q: "12. એક કાર X સ્થાનથી Y સ્થાન સુધી અચળ ઝડપ v1, અને પાછી X સ્થાને અચળ ઝડપ v2 થી આવે છે. સરેરાશ ઝડપ કેટલી?", opt: ["(v1+v2)/2", "√(v1v2)", "2v1v2/(v1+v2)", "1/v1 + 1/v2"], ans: 2 },
+            { sub: "Physics", q: "16. કણનો વેગ v = a + bt + ct² હોય, તો a નો એકમ શું થાય?", opt: ["m/sec", "m/sec²", "m²/sec", "m/sec³"], ans: 0 },
+            { sub: "Physics", q: "23. એક બસ 10 ms⁻¹ ની ઝડપે ગતિ કરે છે. સ્કૂટરસવાર 100s માં ઓવરટેક કરવા માંગે છે. અંતર 1km છે. સ્કૂટરની ઝડપ કેટલી?", opt: ["40", "25", "10", "20"], ans: 3 },
+            { sub: "Physics", q: "25. CGS એકમ પદ્ધતિમાં ઘનતાનું મૂલ્ય 4 g cm⁻³ છે. 100 g અને 10 cm ને મૂળભૂત એકમ લો તો નવું મૂલ્ય?", opt: ["0.04", "0.4", "40", "400"], ans: 2 },
+            { sub: "Physics", q: "27. P = B²l² / m, જ્યાં B=ચુંબકીય ક્ષેત્ર, l=લંબાઈ, m=દળ. P નું પારિમાણિક સૂત્ર?", opt: ["MLT⁻³", "ML²T⁻⁴I⁻²", "M²L²T⁻⁴I", "MLT⁻²I⁻²"], ans: 0 },
+            { sub: "Physics", q: "44. એક કણ વર્તુળકાર માર્ગ પર ગતિ કરી રહયો છે કે જે 40 સેકન્ડમાં એક પરિભ્રમણ પૂર્ણ કરે છે. 2 મિનિટ 20 સેકંડમાં, સ્થાનાંતર શું હશે? (R=ત્રિજ્યા)", opt: ["0", "2R", "2πR", "R√2"], ans: 1 },
+
+            // --- CHEMISTRY ---
+            { sub: "Chemistry", q: "1. નીચેના પૈકી કયા સમઇલેક્ટ્રૉનીય છે?", opt: ["Na+ અને Ne", "Na અને K", "Mg+ અને Al", "O- અને F"], ans: 0 },
+            { sub: "Chemistry", q: "6. 6 nm તરંગલંબાઈ ધરાવતા પીળા પ્રકાશની આવૃત્તિ કેટલી થશે?", opt: ["5×10¹⁴ Hz", "2.5×10¹⁴ Hz", "5×10⁷ Hz", "2.5×10⁷ Hz"], ans: 2 },
+            { sub: "Chemistry", q: "8. હાઇડ્રોજન વર્ણપટની લાયમેન શ્રેણીમાં રેખાઓની સંખ્યા કેટલી હોય છે?", opt: ["8", "6", "5", "3"], ans: 2 },
+            { sub: "Chemistry", q: "13. હાઇડ્રોજન પરમાણુની પ્રથમ ઉત્તેજિત અવસ્થાની ઊર્જા કેટલી થાય?", opt: ["-6.80 eV", "-0.85 eV", "-1.7 eV", "-3.40 eV"], ans: 3 },
+            { sub: "Chemistry", q: "15. કેટલા મોલ e- નું વજન 1 kg થશે?", opt: ["6.626×10⁻³⁴", "(1/9.108)×10³¹", "(1/9.108)×10⁸", "1.1×10⁷"], ans: 2 },
+            { sub: "Chemistry", q: "18. એમોનિયાના એક નમૂનામાં નાઇટ્રોજનનું પ્રમાણ 74.11% છે. એમોનિયાની શુદ્ધતા કેટલી?", opt: ["90.89%", "90%", "89%", "92%"], ans: 1 },
+            { sub: "Chemistry", q: "21. એક સ્ટીલના પાત્રમાં 64 g O₂ અને 10 g H₂ છે. કેટલું પાણી (H₂O) બનશે?", opt: ["3 મોલ", "1 મોલ", "4 મોલ", "2 મોલ"], ans: 2 },
+            { sub: "Chemistry", q: "28. યુરિયાના 100 ml દ્રાવણમાં 6.02×10²⁰ અણુઓ છે. સાંદ્રતા (M) કેટલી?", opt: ["0.02 M", "0.01 M", "0.001 M", "0.1 M"], ans: 1 },
+            { sub: "Chemistry", q: "32. નીચેનાઓમાં પાણીના અણુઓનું મહત્તમ પ્રમાણ શેમાં હશે?", opt: ["18 અણુઓ", "1.8 g પાણી", "18 g પાણી", "18 મોલ પાણી"], ans: 3 },
+            { sub: "Chemistry", q: "42. જો ઇલેક્ટ્રૉનની ગતિઊર્જા 2.8×10⁻²³ J હોય તો દ-બ્રોગ્લી તરંગલંબાઈ?", opt: ["9.28×10⁻¹⁰ m", "9.28×10⁻⁷ m", "9.28×10⁻⁴ m", "9.28×10⁻⁸ m"], ans: 1 },
+            { sub: "Chemistry", q: "44. ચતુર્થ શક્તિસ્તરમાં રહેલ કુલ કક્ષકોની સંખ્યા કેટલી છે?", opt: ["8", "16", "32", "4"], ans: 1 },
+
+            // --- BIOLOGY ---
+            { sub: "Biology", q: "1. 'ઓમનિસ સેલ્યુલા-ઇ-સેલ્યુલા' (Omnis cellula-e cellula) નો અર્થ શું થાય?", opt: ["કોષ સજીવનો એકમ છે", "બધા સજીવો કોષના બનેલા છે", "બધા કોષો પૂર્વ અસ્તિત્વ ધરાવતા કોષમાંથી બને છે", "ઉપરના બધા જ"], ans: 2 },
+            { sub: "Biology", q: "3. માનવમાં ઓકિસજનનું વહન કરતાં કોષોનું (RBC) કદ કેટલું છે?", opt: ["3-5 μm", "0.3 μm", "7.0 μm", "20 μm"], ans: 2 },
+            { sub: "Biology", q: "5. આપણા શરીરમાં O₂ નું વહન કરતા કોષનો આકાર કેવો હોય છે?", opt: ["અમીબોઇડ", "લાંબા અને સાંકડા", "ગોળ અને દ્વિઅંતર્ગોળ", "ગોળ અને અંડાકાર"], ans: 2 },
+            { sub: "Biology", q: "7. નીચે આપેલ વિધાન આદિકોષકેન્દ્રીય કોષ માટે અસંગત છે.", opt: ["તેમના કદ નાના હોય છે", "કોષવિભાજન ધીમું હોય છે", "પટલમય અંગિકાઓ હોતી નથી", "જીવાણુ, PPLO ઉદાહરણ છે"], ans: 1 },
+{ sub: "Biology", q: "9. મેસોઝોમ્સ......... નું રૂપાંતરણ છે.", opt: ["કોષદિવાલ", "પ્લાસ્મિડ", "કોષરસસ્તર", "ઉપરના બધા જ"], ans: 2 },
+            { sub: "Biology", q: "11. સાયનોબેકટેરિયાના કોષરસમાં પટલથી વિસ્તૃતીકરણ પામેલ રચના કઈ છે?", opt: ["પક્ષ્મ", "રંજકકણ (Chromatophore)", "ક્રોમેટોફોર", "કણાભસૂત્ર"], ans: 2 },
+            { sub: "Biology", q: "13. એક mRNA પર એક કરતાં વધારે રિબોઝોમ્સ આવેલ હોય તો તેને શું કહે છે?", opt: ["પોલીરિબોઝોમ્સ", "પોલીન્યુકિલઓઝોમ્સ", "પોલીસેકેરાઈડ", "પોલીન્યુકિલઓટાઇડ"], ans: 0 },
+            { sub: "Biology", q: "17. અંત: પટલમય તંત્રનો ભાગ નથી.", opt: ["રસધાની", "હરિતકણ", "ગોલ્ગીકાય", "અંત: કોષરસજાળ"], ans: 1 },
+            { sub: "Biology", q: "21. કોષકેન્દ્રિકા......... નું સંશ્લેષણ કરે છે.", opt: ["rRNA", "mRNA", "tRNA", "ઉપરના બધા જ"], ans: 0 },
+            { sub: "Biology", q: "31. GLUT-4 માટે કયો જવાબ સાચો છે?", opt: ["કાર્બોદિતની રચના", "લિપિડ રચના", "કોષમાં ગ્લુકોઝના વહનને પ્રેરે છે", "ગ્લુકોઝનું વિઘટન કરે છે"], ans: 2 },
+            { sub: "Biology", q: "40. એક DNA માં એક શ્રૃંખલામાં 22 થાયમીન છે અને સામે 28 ગ્વાનીન છે. લંબાઈ?", opt: ["50 Å", "170 Å", "200 Å", "85 Å"], ans: 1 },
+            { sub: "Biology", q: "50. બેક્ટેરિયા દર 35 મિનીટે વિભાજન પામે છે. 10^8 કોષો 175 મિનીટ પછી કેટલા થશે?", opt: ["5 × 10⁵", "35 × 10⁵", "32 × 10⁸", "175 × 10⁵"], ans: 2 },
+            { sub: "Biology", q: "52. યીસ્ટ કોષમાં કોષચક્ર પૂર્ણ થતા લાગતો સમય?", opt: ["90 મિનીટ", "9 મિનીટ", "60 મિનીટ", "24 કલાક"], ans: 0 },
+            { sub: "Biology", q: "60. ભાજનોતરાવસ્થા I માં શું થાય છે?", opt: ["સેન્ટ્રોમિયરનું વિભાજન", "સમજાત રંગસૂત્રો અલગ થાય છે", "DNA સ્વયંજનન", "કોષકેન્દ્રપટલ અદ્રશ્ય"], ans: 1 },
+            { sub: "Biology", q: "63. નાળિયેરનો પ્રવાહી ભ્રૂણપોષ શું છે?", opt: ["બહુકોષીય", "મુક્ત કોષકેન્દ્રીય", "મધ્યફલાવરણ", "અંતઃ ફલાવરણ"], ans: 1 },
+            { sub: "Biology", q: "74. SER (લીસી અંતઃકોષરસજાળ) નું મુખ્ય કાર્ય શું છે?", opt: ["પ્રોટીન સંશ્લેષણ", "લિપિડ સંશ્લેષણ", "શ્વસન", "પ્રકાશસંશ્લેષણ"], ans: 1 },
+            { sub: "Biology", q: "81. લાયસોઝોમ્સના ઉત્સેચકો કઈ pH પર સક્રિય હોય છે?", opt: ["એસિડિક", "બેઝિક", "તટસ્થ", "કોઈ પણ"], ans: 0 }
+        ];
+
+        let timeLeft = 45 * 60; // 45 Minutes
+        let timerInterval;
+
+        // --- FUNCTIONS ---
+
+        function startQuiz() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('quiz-interface').style.display = 'flex';
+            renderQuestions();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            let html = '';
+            
+            quizData.forEach((item, index) => {
+                // Determine Subject Tag Color
+                let tagClass = 'tag-phy';
+                if(item.sub === 'Chemistry') tagClass = 'tag-chem';
+                if(item.sub === 'Biology') tagClass = 'tag-bio';
+
+                html += 
+                <div class="q-card" id="card-${index}">
+                    <div class="subject-tag ${tagClass}">${item.sub}</div>
+                    <div class="q-text">${item.q}</div>
+                    <div class="options-list">
+                        ${item.opt.map((opt, optIndex) => 
+                            <div>
+                                <input type="radio" name="q${index}" id="q${index}_${optIndex}" value="${optIndex}">
+                                <label class="opt-label" for="q${index}_${optIndex}">
+                                    <span style="margin-right:10px; font-weight:bold; color:#94a3b8;">${String.fromCharCode(65+optIndex)}</span> 
+                                    ${opt}
+                                </label>
+                            </div>
+                        ).join('')}
+                    </div>
+                </div>
+                ;
+            });
+            
+            container.innerHTML = html;
+        }
+function updateTimer() {
+            const timerEl = document.getElementById('timer');
+            let min = Math.floor(timeLeft / 60);
+            let sec = timeLeft % 60;
+            
+            timerEl.innerText = ${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')};
+            
+            if (timeLeft < 300) timerEl.style.background = "#ef4444"; // Red alert last 5 mins
+
+            if (timeLeft <= 0) {
+                submitQuiz();
+            } else {
+                timeLeft--;
+            }
+        }
+function submitQuiz() {
+            clearInterval(timerInterval);
+            let score = 0;
+            let attempted = 0;
+            let correct = 0;
+            let wrong = 0;
+
+            quizData.forEach((item, index) => {
+                const selected = document.querySelector(input[name="q${index}"]:checked);
+                const card = document.getElementById(card-${index});
+                const allLabels = card.querySelectorAll('.opt-label');
+
+                // Show Correct Answer (Green)
+                allLabels[item.ans].classList.add('correct');
+
+                if (selected) {
+                    attempted++;
+                    if (parseInt(selected.value) === item.ans) {
+                        score += 4;
+                        correct++;
+                    } else {
+                        score -= 1;
+                        wrong++;
+                        // Show Wrong Selection (Red)
+                        const wrongLabel = card.querySelector(label[for="${selected.id}"]);
+                        wrongLabel.classList.add('wrong');
+                    }
+                }
+            });
+
+            // Show Result Modal
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('accuracy-text').innerHTML = 
+                ✅ Correct: ${correct} &nbsp; | &nbsp; ❌ Wrong: ${wrong} <br><br>
+                Attempted: ${attempted} / ${quizData.length}
+            ;
+            document.getElementById('result-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+            // Scroll to top to review
+            document.querySelector('.questions-wrapper').scrollTop = 0;
+        }
+
+    </script>
+</body>
+</html>
