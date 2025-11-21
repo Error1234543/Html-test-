@@ -1,0 +1,11 @@
+{
+  "KRIVA": [
+    "tests/kriva/test1/data.json",
+    "tests/kriva/test2/data.json",
+    "tests/kriva/test3/data.json"
+  ],
+  "Lakshya": [
+    "tests/lakshya/test1/data.json",
+    "tests/lakshya/test2/data.json"
+  ]
+}
