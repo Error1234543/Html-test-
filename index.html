@@ -1,136 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>KRIVA TESTS</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn X Pro | Electric Blue Thunder</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: radial-gradient(circle at top, #000814, #001933 60%, #000814);
+      color: #d0e7ff;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Lightning */
+    .lightning {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(120deg, transparent, transparent 20%, rgba(0,195,255,0.05) 21%);
+      animation: flash 3s infinite;
+      z-index: 0;
+    }
+    @keyframes flash { 0%,90%,100%{opacity:0;} 50%{opacity:1;} }
 
-body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
-  padding: 30px;
-  min-height: 100vh;
-}
+    /* Logo */
+    .SONIC {
+      font-size: 2.4rem; font-weight: bold;
+      color: #00d4ff;
+      text-shadow: 0 0 15px #00eaff, 0 0 25px #00aaff;
+      animation: glow 2s infinite alternate;
+      margin-bottom: 1.5rem; text-align: center; z-index: 2;
+    }
+    @keyframes glow {
+      0%{text-shadow:0 0 15px #00bfff;} 
+      100%{text-shadow:0 0 40px #00eaff;}
+    }
 
-h1 {
-  text-align: center;
-  font-size: 2.8em;
-  margin-bottom: 40px;
-  color: #0d47a1;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-}
+    h2 { color:#00c8ff; font-size:2rem; text-shadow:0 0 15px #00eaff; z-index:2; }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-}
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 2rem;
+      width: 100%; max-width: 1200px; z-index: 2;
+    }
 
-.card {
-  background: linear-gradient(145deg, #ffffff, #dceaff);
-  padding: 25px;
-  border-radius: 15px;
-  font-size: 1.2em;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-}
-.card:hover {
-  transform: translateY(-8px);
-  background: linear-gradient(145deg, #e3f2fd, #bbdefb);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-}
+    /* Cards */
+    .card {
+      background: linear-gradient(145deg, #00182e, #002b55);
+      border: 2px solid #00eaff;
+      border-radius: 15px;
+      padding: 1.5rem;
+      box-shadow: 0 0 20px rgba(0,238,255,0.25);
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0,238,255,0.7);
+      border-color: #33ccff;
+    }
+    .card h3 { color:#00eaff; text-shadow:0 0 10px #00bfff; }
 
-.popup {
-  display: none;
-  position: fixed;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(3px);
-  z-index: 1000;
-}
-.popup-content {
-  background: #ffffff;
-  width: 90%; max-width: 450px;
-  margin: 8% auto;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-  text-align: center;
-  animation: popupShow 0.3s ease;
-}
-@keyframes popupShow {
-  from { transform: translateY(-50px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
+    footer { margin-top:3rem; color:#78caff; text-align:center; }
 
-.links a {
-  display: block;
-  background: #0d47a1;
-  padding: 15px;
-  margin: 12px 0;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-.links a:hover {
-  background: #1976d2;
-  transform: scale(1.05);
-}
+    /* Popup */
+    .popup {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,10,30,0.96);
+      display:flex; justify-content:center; align-items:center;
+      z-index:999; opacity:0; visibility:hidden; transition:0.4s ease;
+    }
+    .popup.active { opacity:1; visibility:visible; }
+    .popup-content {
+      background:#001933; border:2px solid #00d4ff; border-radius:15px;
+      padding:2rem; width:90%; max-width:500px;
+      box-shadow:0 0 30px rgba(0,238,255,0.4);
+      max-height:90vh; overflow-y:auto; text-align:center;
+    }
+    .links a {
+      display:block; margin:6px 0; padding:10px 12px;
+      text-decoration:none; color:#ccefff;
+      background:#002244; border:1px solid #00d4ff; border-radius:10px;
+      transition:0.3s;
+    }
+    .links a:hover { background:#00eaff; color:#00182e; font-weight:bold; box-shadow:0 0 20px #00eaff; }
+    .close-btn {
+      background:#00eaff; color:#00182e; border:none; padding:10px 20px;
+      border-radius:10px; font-weight:bold; margin-top:15px; cursor:pointer;
+    }
 
-button {
-  padding: 12px 25px;
-  border: none;
-  background: #ef5350;
-  color: white;
-  font-size: 1em;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-}
-button:hover {
-  background: #e53935;
-  transform: scale(1.05);
-}
-
-</style>
-<script>
-function openPopup(id) {
-  document.getElementById("popup-" + id).style.display = "block";
-}
-function closePopup(id) {
-  document.getElementById(id).style.display = "none";
-}
-</script>
+    /* Telegram */
+    .tg-popup {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.9); display:flex; justify-content:center; align-items:center; z-index:1000;
+    }
+    .tg-box {
+      background:#001933; border:2px solid #00d4ff; border-radius:15px; padding:2rem; width:90%; max-width:400px; text-align:center; color:#ccefff;
+    }
+    .tg-buttons a, .tg-buttons button {
+      background:#00eaff; color:#00182e; padding:10px 20px; border:none; border-radius:10px; font-weight:bold; margin:10px; cursor:pointer;
+    }
+  </style>
 </head>
 <body>
 
-<h1>📘 KRIVA TESTS</h1>
+  <div class="lightning"></div>
 
-<div class="grid">
-  <div class="card" onclick="openPopup('kriva')">KRIVA TEST LIST</div>
-</div>
-
-<div class="popup" id="popup-kriva">
-  <div class="popup-content">
-    <h2>Available Tests</h2>
-    <div class="links">
-      <a href="quiz.html?test=tests/TEST1/data.json">TEST 1</a>
-      <a href="quiz.html?test=tests/TEST2/data.json">TEST 2</a>
-      <a href="quiz.html?test=tests/TEST3/data.json">TEST 3</a>
+  <!-- Telegram Popup -->
+  <div class="tg-popup" id="tg-popup">
+    <div class="tg-box">
+      <h3>⚡ Join our Telegram Channel</h3>
+      <p>Get updates & electric blue notes instantly!</p>
+      <div class="tg-buttons">
+        <a href="https://t.me/+NGUSfa7ns8c4OTll" target="_blank">Join Channel</a>
+        <button onclick="closeTG()">Dismiss ❌</button>
+      </div>
     </div>
-    <button onclick="closePopup('popup-kriva')">Close</button>
   </div>
+<!-- 🔹 Owner Contact Button (Centered Top) -->
+<div style="position:fixed; top:15px; left:50%; transform:translateX(-50%); z-index:999;">
+  <a href="https://t.me/Batmandmbot" target="_blank"
+     style="background:#00eaff; color:#00182e; font-weight:bold; 
+            padding:10px 18px; border-radius:10px; text-decoration:none; 
+            box-shadow:0 0 15px rgba(0,238,255,0.7); transition:0.3s;">
+    ⚡ Owner Contact
+  </a>
 </div>
 
-</body>
-</html>
+<h3>💠 LEARN X PRO</h3>
+
+
+<!-- Main Grid -->
+<div class="grid">
+
+  <!-- Internal Tests -->
+  <div class="card" onclick="openPopup('physics')"><h3>📘 NEET Physics Tests</h3></div>
+  <div class="card" onclick="openPopup('chemistry')"><h3>🧪 NEET Chemistry Tests</h3></div>
+  <div class="card" onclick="openPopup('biology')"><h3>🌿 NEET Biology Tests</h3></div>
+  <div class="card" onclick="openPopup('board')"><h3>📝 STD 12 BOARD TESTS</h3></div>
+  <div class="card" onclick="openPopup('mock')"><h3>🧩 MOCK TESTS</h3></div>
+  <div class="card" onclick="openPopup('gujcet')"><h3>♟️ GUJCET TEST</h3></div>
+  <div class="card" onclick="openPopup('maths')"><h3>📗 MATHS (BOARD)</h3></div>
+  <div class="card" onclick="openPopup('neetphy')"><h3>⚽ NEET X PHY</h3></div>
+
+  <!-- Extra folders (editable names) -->
+  <div class="card" onclick="openPopup('neetchem')"><h3>NEET X CHEMISTRY 12 TH</h3></div>
+  <div class="card" onclick="openPopup('neetbio')"><h3>🌱 NEET X BIO</h3></div>
+  <div class="card" onclick="openPopup('11thchem')"><h3>NEET X CHEMISTRY 11TH</h3></div>
+  <div class="card" onclick="openPopup('firephy')"><h3>firephy test</h3></div>
+  <div class="card" onclick="openPopup('pyq')"><h3>📜 PYQ COLLECTION</h3></div>
+  <div class="card" onclick="openPopup('extra')"><h3>🎯 EXTRA MATERIAL</h3></div>
+  <div class="card" onclick="openPopup('updates')"><h3>🔔 UPDATES</h3></div>
+  <div class="card" onclick="openPopup('links')"><h3>🔗 IMPORTANT LINKS</h3>
+</div>
+</div>
+   
