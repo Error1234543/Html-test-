@@ -4,11 +4,86 @@
 <meta charset="UTF-8">
 <title>Quiz</title>
 <style>
-body { font-family: Arial; padding: 20px; }
-.question-box { background: #fff; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-.option { margin: 10px 0; }
-button { padding: 10px 20px; font-size: 18px; }
-.result { background: #e8ffe8; padding: 20px; border-radius: 10px; }
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4ff, #e0f7fa);
+  padding: 30px;
+  min-height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  color: #0d47a1;
+  margin-bottom: 40px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+#quiz-container {
+  max-width: 800px;
+  margin: auto;
+}
+
+.question-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.question-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+}
+
+.option {
+  display: block;
+  background: #e3f2fd;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+.option:hover {
+  background: #bbdefb;
+  transform: scale(1.02);
+}
+
+button {
+  display: block;
+  margin: 30px auto;
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: #0d47a1;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+  background: #1976d2;
+  transform: scale(1.05);
+}
+
+#result {
+  max-width: 800px;
+  margin: 30px auto;
+  background: #e8ffe8;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+img {
+  display: block;
+  margin: 10px 0;
+  max-width: 100%;
+  border-radius: 10px;
+}
 </style>
 </head>
 <body>
@@ -35,8 +110,8 @@ fetch(jsonFile)
 
       box.innerHTML = `
         <h3>${i+1}. ${q.question}</h3>
-        ${q.image ? `<img src="${q.image}" width="200"><br>` : ""}
-        ${q.options.map((op, index) => `
+        ${q.image ? `<img src="${q.image}"><br>` : ""}
+        ${q.options.map(op => `
             <label class="option">
               <input type="radio" name="q${i}" value="${op}"> ${op}
             </label>
@@ -71,6 +146,8 @@ function submitQuiz() {
       resultHTML += `<h3>Total Wrong: ${wrong}</h3>`;
 
       document.getElementById("result").innerHTML = resultHTML;
+      // Scroll to result
+      document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
     });
 }
 </script>
