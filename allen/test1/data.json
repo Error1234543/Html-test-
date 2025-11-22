@@ -1,7 +1,7 @@
 {
   "title": "KRIVA Test 1 - Sample Demo",
   "questions": [
-    { "number": 1,  "image": "", "answer": "" },
+    { "number": 1,  "image": "https://i.ibb.co/8nYkWKp6/x.jpg", "answer": "" },
     { "number": 2,  "image": "", "answer": "" },
     { "number": 3,  "image": "", "answer": "" },
     { "number": 4,  "image": "", "answer": "" },
