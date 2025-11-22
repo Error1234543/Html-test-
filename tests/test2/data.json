@@ -1,20 +1,14 @@
 {
   "title": "KRIVA Test 1 - Sample Demo",
-  
-  "syllabus": {
-    "chemistry": {
-      "standard": "11th",
-      "chapters": ["1", "2"]
-    },
-    "biology": {
-      "standard": "11th",
-      "chapters": ["8", "9", "10"]
-    },
-    "part_a": {
-      "standard": "11th",
-      "chapters": ["1", "2"]
-    }
-  },
+
+  "syllabus": [
+    "Chapter 1 – Reproduction in Organisms",
+    "Chapter 2 – Cell Cycle & Cell Division",
+    "Chapter 3 – Human Reproduction",
+    "Chapter 4 – Reproductive Health",
+    "Chapter 5 – Principles of Inheritance",
+    "Chapter 6 – Molecular Basis of Inheritance"
+  ],
 
   "questions": [
     { "number": 1,  "image": "", "answer": "" },
