@@ -24,31 +24,8 @@
         letter-spacing: 1px;
     }
 
-    #loginForm, #folderListContainer {
-        max-width: 400px;
-        margin: 20px auto;
-        text-align: center;
-    }
-
-    input {
-        width: 80%;
-        padding: 12px;
-        margin: 8px 0;
-        border-radius: 8px;
-        border: none;
-        font-size: 16px;
-    }
-
-    button {
-        padding: 12px 25px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #fff;
-        color: #4b6bff;
-        font-weight: 600;
-        margin-top: 10px;
+    #folderList, #testList {
+        margin-top: 20px;
     }
 
     .folder, .test {
@@ -76,168 +53,53 @@
         font-size: 22px;
         font-weight: 600;
     }
-
-    /* Top Contact/Join Links */
-    #topLinks {
-        text-align:center; 
-        margin-bottom:20px; 
-        display:flex; 
-        justify-content:center; 
-        gap:20px;
-    }
-
-    #topLinks a {
-        color:#fff; 
-        text-decoration:none; 
-        font-weight:600; 
-        background:rgba(0,0,0,0.2); 
-        padding:10px 15px; 
-        border-radius:8px; 
-        display:inline-block;
-        transition:0.3s;
-    }
-
-    #topLinks a:hover {
-        background:rgba(255,255,255,0.3);
-        color:#000;
-    }
-
-    hr {
-        border-color: rgba(255,255,255,0.3);
-    }
 </style>
 
 </head>
 <body>
 
-<!-- Contact & Join Links -->
-<div id="topLinks">
-    <a href="https://t.me/sonic8307" target="_blank">📩 Contact Owner</a>
-    <a href="https://t.me/+NGUSfa7ns8c4OTll" target="_blank">➕ Join Telegram</a>
-</div>
+<h2>📁 KRIVA – Select Test Category</h2>
 
-<!-- Login Form -->
-<div id="loginForm">
-    <h2>🔒 KRIVA – Login</h2>
+<div id="folderList"></div>
 
-    <!-- Student Login -->
-    <input type="email" id="email" placeholder="Email"><br>
-    <input type="password" id="password" placeholder="Password"><br>
-    <button onclick="studentLogin()">Student Login</button>
-
-    <hr>
-
-    <!-- Admin Login -->
-    <input type="password" id="adminCode" placeholder="Admin Code (Owner Only)"><br>
-    <button onclick="adminLogin()">Admin Login</button>
-
-    <p id="loginError" style="color:#ffdddd;"></p>
-</div>
-
-<!-- Folder & Test List -->
-<div id="folderListContainer" style="display:none;">
-    <h2>📁 KRIVA – Select Test Category</h2>
-    <div id="folderList"></div>
-    <h2 id="selectedFolder"></h2>
-    <div id="testList"></div>
-</div>
+<h2 id="selectedFolder"></h2>
+<div id="testList"></div>
 
 <script>
-// -------------------- STUDENT USERS --------------------
-const users = [
-    {email:"user1@gmail.com", pass:"123456"},
-    {email:"user2@gmail.com", pass:"234567"},
-    {email:"user3@gmail.com", pass:"345678"},
-    {email:"user4@gmail.com", pass:"456789"},
-    {email:"user5@gmail.com", pass:"567890"}
-];
+fetch("manifest.json")
+  .then(res => res.json())
+  .then(data => {
+      window.testManifest = data;
+      loadFolders(data);
+  });
 
-// -------------------- ADMIN CODE --------------------
-const ADMIN_CODE = "701699";
-
-// -------------------- SINGLE DEVICE LOGIN --------------------
-function forceLogoutIfAlreadyLoggedIn(email) {
-    let activeUser = localStorage.getItem("activeUser");
-
-    if(activeUser && activeUser !== email) {
-        // someone else was logged in → force logout
-        localStorage.removeItem("activeUser");
-    }
-
-    localStorage.setItem("activeUser", email);
-}
-
-// -------------------- STUDENT LOGIN --------------------
-function studentLogin() {
-    let email = document.getElementById("email").value.trim();
-    let pass = document.getElementById("password").value.trim();
-
-    let user = users.find(u => u.email === email && u.pass === pass);
-
-    if(!user) {
-        document.getElementById("loginError").innerText = "❌ Invalid Email or Password!";
-        return;
-    }
-
-    // enforce single device login
-    forceLogoutIfAlreadyLoggedIn(email);
-
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("folderListContainer").style.display = "block";
-    loadFoldersData();
-}
-
-// -------------------- ADMIN LOGIN --------------------
-function adminLogin() {
-    let code = document.getElementById("adminCode").value.trim();
-
-    if(code !== ADMIN_CODE) {
-        document.getElementById("loginError").innerText = "❌ Wrong Admin Code!";
-        return;
-    }
-
-    // admin always overrides
-    forceLogoutIfAlreadyLoggedIn("ADMIN");
-
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("folderListContainer").style.display = "block";
-    loadFoldersData();
-}
-
-// -------------------- LOAD TESTS --------------------
-function loadFoldersData() {
-    fetch("manifest.json")
-      .then(res => res.json())
-      .then(data => {
-          window.testManifest = data;
-          loadFolders(data);
-      });
-}
-
+// show folders
 function loadFolders(data) {
     let html = "";
     Object.keys(data).forEach(folder => {
-        html += `<div class="folder" onclick="openFolder('${folder}')">
+        html += <div class="folder" onclick="openFolder('${folder}')">
                     📂 ${folder}
-                 </div>`;
+                 </div>;
     });
     document.getElementById("folderList").innerHTML = html;
 }
 
+// show tests inside folder
 function openFolder(folderName) {
     document.getElementById("selectedFolder").innerText = folderName + " – Tests";
     let tests = window.testManifest[folderName];
 
     let html = "";
     tests.forEach(test => {
-        html += `<div class="test" onclick="openTest('${test.file}')">
+        html += <div class="test" onclick="openTest('${test.file}')">
                     📝 ${test.name}
-                 </div>`;
+                 </div>;
     });
 
     document.getElementById("testList").innerHTML = html;
 }
 
+// open quiz.html with data.json
 function openTest(path) {
     window.location.href = "quiz.html?test=" + path;
 }
