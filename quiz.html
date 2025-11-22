@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -44,6 +43,15 @@
             color: #333;
         }
 
+        .syllabus-box ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .syllabus-box li {
+            margin: 4px 0;
+        }
+
         .question-card {
             background: #ffffff;
             padding: 20px;
@@ -62,6 +70,7 @@
             width: 100%;
             border-radius: 14px;
             margin-bottom: 15px;
+            background: #ddd;
         }
 
         .options div {
@@ -127,9 +136,7 @@
 
     <div class="syllabus-box">
         <h2>📘 Syllabus</h2>
-        <p><b>Chemistry (Std 11)</b>: CH 1,2</p>
-        <p><b>Biology (Std 11)</b>: CH 8,9,10</p>
-        <p><b>PART - A (Std 11)</b>: CH 1,2</p>
+        <ul id="syllabusList"></ul>
     </div>
 
     <div id="quizArea"></div>
@@ -150,6 +157,12 @@ async function loadJSON() {
     quizData = await res.json();
 
     document.getElementById("testTitle").innerText = quizData.title;
+
+    // Load syllabus
+    const syllabusList = document.getElementById("syllabusList");
+    quizData.syllabus.forEach(item => {
+        syllabusList.innerHTML += `<li>${item}</li>`;
+    });
 
     loadQuestions();
 }
