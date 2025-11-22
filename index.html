@@ -90,9 +90,14 @@ function openFolder(folderName) {
     let tests = window.testManifest[folderName];
 
     let html = "";
-    tests.forEach((testPath, i) => {
-        html += `<div class="test" onclick="openTest('${testPath}')">
-                    📝 Test ${i+1}
+    // check if manifest uses objects with name/file
+    tests.forEach(test => {
+        // if test is string, fallback to default naming
+        let displayName = typeof test === "string" ? "📝 Test" : test.name;
+        let filePath = typeof test === "string" ? test : test.file;
+
+        html += `<div class="test" onclick="openTest('${filePath}')">
+                    📝 ${displayName}
                  </div>`;
     });
 
