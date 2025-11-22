@@ -1,7 +1,7 @@
 {
   "title": "YAKEEN NEET PHYSICS TEST 1",
   "questions": [
-    { "number": 1,  "image": "https://i.ibb.co/0p51dSng/x.png", "answer": "c" },
+    { "number": 1,  "image": "https://i.ibb.co/0p51dSng/x.png", "answer": "C" },
     { "number": 2,  "image": "https://i.ibb.co/0p51dSng/x.png", "answer": "b" },
     { "number": 3,  "image": "https://i.ibb.co/0p51dSng/x.png", "answer": "d" },
     { "number": 4,  "image": "https://i.ibb.co/0p51dSng/x.png", "answer": "d" },
@@ -49,6 +49,6 @@
     { "number": 42, "image": "https://i.ibb.co/67BV6KrT/x.png", "answer": "c" },
     { "number": 43, "image": "https://i.ibb.co/67BV6KrT/x.png", "answer": "b" },
     { "number": 44, "image": "https://i.ibb.co/67BV6KrT/x.png", "answer": "d" },
-    { "number": 45, "image": "https://i.ibb.co/67BV6KrT/x.png", "answer": "d" }
+    { "number": 45, "image": "https://i.ibb.co/67BV6KrT/x.png", "answer": "D" }
   ]
 }
