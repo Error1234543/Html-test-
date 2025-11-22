@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -34,8 +35,9 @@
         }
 
         .syllabus-title {
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 8px;
+            color: #333;
         }
 
         .question-box {
@@ -49,6 +51,7 @@
         .question-number {
             font-weight: 600;
             margin-bottom: 10px;
+            color: #333;
         }
 
         .question-box img {
@@ -93,8 +96,8 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.10);
         }
 
-        .correct { color: green; font-weight: 600; }
-        .wrong { color: red; font-weight: 600; }
+        .correct { color: green; font-weight: 700; }
+        .wrong { color: red; font-weight: 700; }
     </style>
 
 </head>
@@ -116,66 +119,75 @@
 </div>
 
 <script>
-    // Auto-load JSON (same folder /data.json)
+    // Load JSON
     fetch("data.json")
         .then(res => res.json())
-        .then(data => {
-            loadTest(data);
-        });
+        .then(data => loadTest(data));
 
     let userAnswers = {};
 
     function loadTest(data) {
 
+        // Title
         document.getElementById("testTitle").innerText = data.title;
 
         // ---------------------------
-        // SYLLABUS LOAD
+        // SYLLABUS
         // ---------------------------
         let s = data.syllabus;
+
         let syllabusHTML = `
             <div class='syllabus-title'>📘 Syllabus</div>
-            <b>Chemistry (${s.chemistry.standard}) :</b> ${s.chemistry.chapters.join(", ")}<br>
-            <b>Biology (${s.biology.standard}) :</b> ${s.biology.chapters.join(", ")}<br>
-            <b>Part A (${s.part_a.standard}) :</b> ${s.part_a.chapters.join(", ")}
+
+            <b>Chemistry (Std - ${s.chemistry.standard}) :</b> 
+            ${s.chemistry.chapters.join(", ")}<br><br>
+
+            <b>Biology (Std - ${s.biology.standard}) :</b>
+            ${s.biology.chapters.join(", ")}<br><br>
+
+            <b>Part A (Std - ${s.part_a.standard}) :</b>
+            ${s.part_a.chapters.join(", ")}
         `;
+
         document.getElementById("syllabusBox").innerHTML = syllabusHTML;
 
         // ---------------------------
-        // QUESTIONS LOAD
+        // QUESTIONS
         // ---------------------------
         let qBox = document.getElementById("questions");
         qBox.innerHTML = "";
 
         data.questions.forEach(q => {
+
+            let imgHTML = q.image !== "" ? `<img src="${q.image}" alt="Question Image">` : "";
+
             let qHTML = `
                 <div class="question-box">
                     <div class="question-number">Question ${q.number}</div>
-                    ${q.image ? `<img src="${q.image}">` : ""}
-                    
+                    ${imgHTML}
+
                     <div class="option" onclick="selectOption(${q.number}, 'A')">A</div>
                     <div class="option" onclick="selectOption(${q.number}, 'B')">B</div>
                     <div class="option" onclick="selectOption(${q.number}, 'C')">C</div>
                     <div class="option" onclick="selectOption(${q.number}, 'D')">D</div>
                 </div>
             `;
+
             qBox.innerHTML += qHTML;
         });
     }
 
     // ---------------------------
-    // OPTION SELECT
+    // SELECT OPTION
     // ---------------------------
     function selectOption(qNo, option) {
         userAnswers[qNo] = option;
 
-        let questionBox = document.querySelectorAll(".question-box")[qNo - 1];
-        questionBox.querySelectorAll(".option").forEach(opt => opt.classList.remove("selected"));
+        let box = document.querySelectorAll(".question-box")[qNo - 1];
+        box.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
 
-        questionBox.querySelectorAll(".option").forEach(opt => {
-            if (opt.innerText === option) {
-                opt.classList.add("selected");
-            }
+        box.querySelectorAll(".option").forEach(o => {
+            if (o.innerText === option) o.classList.add("selected");
         });
     }
 
@@ -187,32 +199,37 @@
         fetch("data.json")
             .then(res => res.json())
             .then(data => {
-                let correct = 0, wrong = 0;
+
+                let correct = 0;
+                let wrong = 0;
 
                 let details = "";
 
                 data.questions.forEach(q => {
-                    let userAns = userAnswers[q.number] || "—";
-                    let realAns = q.answer || "—";
 
-                    if (userAns === realAns) correct++;
+                    let uAns = userAnswers[q.number] || "—";
+                    let right = q.answer || "—";
+
+                    if (uAns === right) correct++;
                     else wrong++;
 
                     details += `
                         Q${q.number}: 
-                        Your Ans: <b class="${userAns === realAns ? 'correct' : 'wrong'}">${userAns}</b> 
-                        | Correct: <b>${realAns}</b><br>
+                        Your Ans: <b class="${uAns === right ? 'correct' : 'wrong'}">${uAns}</b> 
+                        | Correct: <b>${right}</b><br>
                     `;
                 });
 
-                document.getElementById("result").style.display = "block";
-                document.getElementById("result").innerHTML = `
+                let res = document.getElementById("result");
+                res.style.display = "block";
+                res.innerHTML = `
                     <h2>Result</h2>
-                    <p>Correct: <b class='correct'>${correct}</b></p>
-                    <p>Wrong: <b class='wrong'>${wrong}</b></p>
+                    <p>Correct: <b class="correct">${correct}</b></p>
+                    <p>Wrong: <b class="wrong">${wrong}</b></p>
                     <hr>
                     ${details}
                 `;
+
                 window.scrollTo(0, document.body.scrollHeight);
             });
     }
