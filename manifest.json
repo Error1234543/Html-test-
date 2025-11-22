@@ -1,7 +1,7 @@
 {
   "YAKEEN NEET GUJARATI 2026 TESTS": [
-    { "file": "tests/test1/data.json", "name": "TEST1 PHY" },
-    { "file": "tests/test2/data.json", "name": "TEST2 CHEM" },
+    { "file": "tests/test1/data.json", "name": "TEST 1 PHY" },
+    { "file": "tests/test2/data.json", "name": "TEST 2 CHEM" },
     { "file": "tests/kriva/test3/data.json", "name": "TEST3 BIO" }
   ],
   "Lakshya": [
