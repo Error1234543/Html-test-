@@ -1,97 +1,254 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="gu">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KRIVA Quiz</title>
+<title>KRIVA – Quiz</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
-  body { font-family: Poppins, sans-serif; background: #f1f3ff; margin:0; padding:20px; }
-  h1 { text-align:center; color:#333; }
-  #syllabusList { margin-bottom:20px; padding-left:20px; }
-  .question { margin-bottom:20px; padding:10px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-  .question img { max-width:100%; margin:10px 0; }
-  .options { list-style:none; padding:0; }
-  .options li { margin:5px 0; }
-  .submit-btn { display:block; margin:20px auto; padding:10px 20px; font-size:16px; background:#4CAF50; color:#fff; border:none; border-radius:5px; cursor:pointer; }
-  .submit-btn:hover { background:#45a049; }
-  #result { margin-top:20px; font-size:18px; font-weight:bold; text-align:center; }
+    body {
+        font-family: Poppins, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #4b6bff, #6f8dff, #a5b9ff);
+        min-height: 100vh;
+        color: white;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    h2.title {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 26px;
+        font-weight: 700;
+    }
+
+    /* ---------------- SYLLABUS BOX ---------------- */
+    .syllabusBox {
+        background: rgba(255,255,255,0.20);
+        padding: 15px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(6px);
+        border-left: 6px solid rgba(255,255,255,0.6);
+        font-size: 16px;
+        line-height: 1.5;
+        white-space: pre-line;
+    }
+
+    .question-box {
+        background: rgba(255,255,255,0.15);
+        padding: 18px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        backdrop-filter: blur(6px);
+        border-left: 6px solid rgba(255,255,255,0.5);
+    }
+
+    .qnum {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .qImg {
+        width: 100%;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        border: 2px solid rgba(255,255,255,0.4);
+    }
+
+    .option {
+        padding: 12px;
+        margin: 8px 0;
+        background: #e8e8ff;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: 0.25s ease;
+        color: black;
+    }
+
+    .option:hover {
+        background: #d6d6ff;
+    }
+
+    .option.selected {
+        background: #212a78;
+        color: white;
+        border-color: #000;
+        transform: scale(1.02);
+    }
+
+    .option.correct {
+        background: #1ca93d !important;
+        color: white;
+        border-color: #064d16;
+    }
+
+    .option.wrong {
+        background: #d32f2f !important;
+        color: white;
+        border-color: #7a0000;
+    }
+
+    #submitBtn {
+        background: #101b5f;
+        color: white;
+        padding: 15px;
+        border-radius: 14px;
+        border: none;
+        font-size: 20px;
+        width: 100%;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: .25s;
+        font-weight: bold;
+    }
+
+    #submitBtn:hover {
+        background: #0c154b;
+        transform: scale(1.03);
+    }
+
+    .resultBox {
+        background: rgba(0,0,0,0.4);
+        padding: 20px;
+        border-radius: 18px;
+        margin-top: 25px;
+        text-align: center;
+        font-size: 20px;
+        display: none;
+    }
 </style>
+
 </head>
 <body>
 
-<h1 id="testTitle">Loading Test...</h1>
+<div class="container">
+    <h2 class="title" id="testTitle">Loading Test...</h2>
 
-<h2>Syllabus</h2>
-<ul id="syllabusList"></ul>
+    <!-- Syllabus Box -->
+    <div class="syllabusBox" id="syllabusBox" style="display:none;"></div>
 
-<div id="questionsContainer"></div>
+    <div id="quizArea"></div>
 
-<button class="submit-btn" onclick="calculateResult()">Submit</button>
+    <button id="submitBtn" onclick="submitTest()">SUBMIT TEST</button>
 
-<div id="result"></div>
+    <div class="resultBox" id="resultBox"></div>
+</div>
+
 
 <script>
-let quizData = {};
-let userAnswers = {};
+// ----------------------------------------------------------------------------
+// LOAD DATA.JSON
+// ----------------------------------------------------------------------------
 
-async function loadQuiz() {
-  const res = await fetch("tests/TEST1/data.json");
-  quizData = await res.json();
+const urlParams = new URLSearchParams(window.location.search);
+const testPath = urlParams.get("test");
 
-  document.getElementById("testTitle").innerText = quizData.title;
+let testData = {};
+let userAnswer = {};
+let submitted = false;
 
-  // Load syllabus
-  const syllabusList = document.getElementById("syllabusList");
-  quizData.syllabus.forEach(chap => {
-    const li = document.createElement("li");
-    li.innerText = chap;
-    syllabusList.appendChild(li);
-  });
+fetch(testPath)
+  .then(res => res.json())
+  .then(data => {
+      testData = data;
 
-  // Load questions
-  const container = document.getElementById("questionsContainer");
-  quizData.questions.forEach(q => {
-    const qDiv = document.createElement("div");
-    qDiv.className = "question";
-    qDiv.innerHTML = `
-      <p><b>Q${q.number}:</b></p>
-      ${q.image ? `<img src="${q.image}" alt="Question ${q.number}">` : ""}
-      <ul class="options">
-        <li><input type="radio" name="q${q.number}" value="A"> Option A</li>
-        <li><input type="radio" name="q${q.number}" value="B"> Option B</li>
-        <li><input type="radio" name="q${q.number}" value="C"> Option C</li>
-        <li><input type="radio" name="q${q.number}" value="D"> Option D</li>
-      </ul>
-    `;
-    container.appendChild(qDiv);
-  });
-}
+      document.getElementById("testTitle").innerText = data.title;
 
-function calculateResult() {
-  let correct = 0;
-  let wrong = 0;
-
-  quizData.questions.forEach(q => {
-    const radios = document.getElementsByName("q" + q.number);
-    let answered = false;
-    radios.forEach(r => {
-      if (r.checked) {
-        answered = true;
-        if (q.answer && r.value === q.answer) {
-          correct++;
-        } else {
-          wrong++;
-        }
+      // SHOW SYLLABUS
+      if (data.syllabus && data.syllabus.trim() !== "") {
+          document.getElementById("syllabusBox").style.display = "block";
+          document.getElementById("syllabusBox").innerText = data.syllabus;
       }
-    });
-    if (!answered) wrong++;
+
+      loadQuestions(data.questions);
   });
 
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerHTML = `Correct: ${correct} | Wrong: ${wrong}`;
+
+// ----------------------------------------------------------------------------
+// RENDER QUESTIONS
+// ----------------------------------------------------------------------------
+
+function loadQuestions(qList) {
+    let html = "";
+
+    qList.forEach((q, i) => {
+        html += `
+        <div class="question-box" id="q${i}">
+            <div class="qnum">Q${q.number}</div>
+            <img src="${q.image}" class="qImg">
+
+            <div id="q${i}_A" class="option" onclick="selectOption(${i}, 'A')">A</div>
+            <div id="q${i}_B" class="option" onclick="selectOption(${i}, 'B')">B</div>
+            <div id="q${i}_C" class="option" onclick="selectOption(${i}, 'C')">C</div>
+            <div id="q${i}_D" class="option" onclick="selectOption(${i}, 'D')">D</div>
+        </div>`;
+    });
+
+    document.getElementById("quizArea").innerHTML = html;
 }
 
-loadQuiz();
+
+// ---------------- SELECT OPTION ----------------
+
+function selectOption(qIndex, optionKey) {
+    if (submitted) return;
+
+    let options = document.querySelectorAll(`#q${qIndex} .option`);
+    options.forEach(o => o.classList.remove("selected"));
+
+    document.getElementById(`q${qIndex}_${optionKey}`).classList.add("selected");
+
+    userAnswer[qIndex] = optionKey;
+}
+
+
+// ---------------- SUBMIT TEST ----------------
+
+function submitTest() {
+    submitted = true;
+
+    let correct = 0;
+    let wrong = 0;
+
+    testData.questions.forEach((q, i) => {
+        let correctAns = q.answer;
+        let selected = userAnswer[i];
+
+        let correctOption = document.getElementById(`q${i}_${correctAns}`);
+        correctOption.classList.add("correct");
+
+        if (selected) {
+            let selectedOpt = document.getElementById(`q${i}_${selected}`);
+
+            if (selected === correctAns) {
+                correct++;
+            } else {
+                wrong++;
+                selectedOpt.classList.add("wrong");
+            }
+        } else {
+            wrong++;
+        }
+    });
+
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML =
+        `✔ Correct: ${correct} <br> ✘ Wrong: ${wrong} <br> Total: ${testData.questions.length}`;
+}
 </script>
 
 </body>
