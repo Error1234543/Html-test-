@@ -1,7 +1,7 @@
 {
   "KRIVA": [
     "tests/test1/data.json",
-    "tests/kriva/test2/data.json",
+    "tests/test2/data.json",
     "tests/kriva/test3/data.json"
   ],
   "Lakshya": [
