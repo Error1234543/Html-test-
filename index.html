@@ -24,8 +24,31 @@
         letter-spacing: 1px;
     }
 
-    #folderList, #testList {
-        margin-top: 20px;
+    #loginForm, #folderListContainer {
+        max-width: 400px;
+        margin: 50px auto;
+        text-align: center;
+    }
+
+    input {
+        width: 80%;
+        padding: 12px;
+        margin: 8px 0;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #fff;
+        color: #4b6bff;
+        font-weight: 600;
+        margin-top: 10px;
     }
 
     .folder, .test {
@@ -58,20 +81,54 @@
 </head>
 <body>
 
-<h2>📁 KRIVA – Select Test Category</h2>
+<div id="loginForm">
+    <h2>🔒 KRIVA – Login</h2>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="login()">Login</button>
+    <p id="loginError" style="color:#ffdddd;"></p>
+</div>
 
-<div id="folderList"></div>
-
-<h2 id="selectedFolder"></h2>
-<div id="testList"></div>
+<div id="folderListContainer" style="display:none;">
+    <h2>📁 KRIVA – Select Test Category</h2>
+    <div id="folderList"></div>
+    <h2 id="selectedFolder"></h2>
+    <div id="testList"></div>
+</div>
 
 <script>
-fetch("manifest.json")
-  .then(res => res.json())
-  .then(data => {
-      window.testManifest = data;
-      loadFolders(data);
-  });
+// ✅ Allowed emails and passwords
+const allowedUsers = [
+    {email:"xd01@gmail.com", password:"SONIC@8307"},
+    {email:"user2@example.com", password:"pass2"},
+    {email:"user3@example.com", password:"pass3"},
+    {email:"user4@example.com", password:"pass4"},
+    {email:"user5@example.com", password:"pass5"}
+];
+
+function login() {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const user = allowedUsers.find(u => u.email === email && u.password === password);
+
+    if(user) {
+        document.getElementById("loginForm").style.display = "none";
+        document.getElementById("folderListContainer").style.display = "block";
+        loadFoldersData(); // load your test data
+    } else {
+        document.getElementById("loginError").innerText = "❌ Invalid email or password!";
+    }
+}
+
+// fetch and show folders
+function loadFoldersData() {
+    fetch("manifest.json")
+      .then(res => res.json())
+      .then(data => {
+          window.testManifest = data;
+          loadFolders(data);
+      });
+}
 
 // show folders
 function loadFolders(data) {
