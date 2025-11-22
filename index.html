@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Selection</title>
+<title>KRIVA Test Selection</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -26,7 +26,7 @@
 
     #loginForm, #folderListContainer {
         max-width: 400px;
-        margin: 50px auto;
+        margin: 20px auto;
         text-align: center;
     }
 
@@ -76,19 +76,55 @@
         font-size: 22px;
         font-weight: 600;
     }
+
+    #topLinks {
+        text-align:center; 
+        margin-bottom:20px;
+    }
+
+    #topLinks a {
+        color:#fff; 
+        text-decoration:none; 
+        margin-right:20px; 
+        font-weight:600; 
+        background:rgba(0,0,0,0.2); 
+        padding:8px 12px; 
+        border-radius:8px;
+        transition:0.3s;
+    }
+
+    #topLinks a:hover {
+        background:rgba(255,255,255,0.3);
+        color:#000;
+    }
 </style>
 
 </head>
 <body>
 
+<!-- Contact & Join Links -->
+<div id="topLinks">
+    <a href="https://t.me/sonic8307" target="_blank">📩 Contact Owner</a>
+    <a href="https://t.me/+NGUSfa7ns8c4OTll" target="_blank">➕ Join Telegram</a>
+</div>
+
+<!-- Login Form -->
 <div id="loginForm">
-    <h2>🔒 SONIC– Login</h2>
-    <input type="email" id="email" placeholder="Email" required><br>
-    <input type="password" id="password" placeholder="Password" required><br>
-    <button onclick="login()">Login</button>
+    <h2>🔒 KRIVA – Login</h2>
+
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="studentLogin()">Student Login</button>
+
+    <hr style="margin:20px 0; border-color:rgba(255,255,255,0.3);">
+
+    <input type="password" id="adminCode" placeholder="Admin Code (Owner Only)"><br>
+    <button onclick="adminLogin()">Admin Login</button>
+
     <p id="loginError" style="color:#ffdddd;"></p>
 </div>
 
+<!-- Folder & Test List -->
 <div id="folderListContainer" style="display:none;">
     <h2>📁 KRIVA – Select Test Category</h2>
     <div id="folderList"></div>
@@ -97,30 +133,68 @@
 </div>
 
 <script>
-// ✅ Allowed emails and passwords
-const allowedUsers = [
-    {email:"xd01@gmail.com", password:"SONIC@8307"},
-    {email:"user2@example.com", password:"pass2"},
-    {email:"user3@example.com", password:"pass3"},
-    {email:"user4@example.com", password:"pass4"},
-    {email:"user5@example.com", password:"pass5"}
+// -------------------- STUDENT USERS --------------------
+const users = [
+    {email:"user1@gmail.com", pass:"123456"},
+    {email:"user2@gmail.com", pass:"234567"},
+    {email:"user3@gmail.com", pass:"345678"},
+    {email:"user4@gmail.com", pass:"456789"},
+    {email:"user5@gmail.com", pass:"567890"}
 ];
 
-function login() {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-    const user = allowedUsers.find(u => u.email === email && u.password === password);
+// -------------------- ADMIN CODE --------------------
+const ADMIN_CODE = "701699";
 
-    if(user) {
-        document.getElementById("loginForm").style.display = "none";
-        document.getElementById("folderListContainer").style.display = "block";
-        loadFoldersData(); // load your test data
-    } else {
-        document.getElementById("loginError").innerText = "❌ Invalid email or password!";
+// -------------------- SINGLE DEVICE LOGIN --------------------
+function forceLogoutIfAlreadyLoggedIn(email) {
+    let activeUser = localStorage.getItem("activeUser");
+
+    if(activeUser && activeUser !== email) {
+        // someone else was logged in → force logout
+        localStorage.removeItem("activeUser");
     }
+
+    localStorage.setItem("activeUser", email);
 }
 
-// fetch and show folders
+// -------------------- STUDENT LOGIN --------------------
+function studentLogin() {
+    let email = document.getElementById("email").value.trim();
+    let pass = document.getElementById("password").value.trim();
+
+    let user = users.find(u => u.email === email && u.pass === pass);
+
+    if(!user) {
+        document.getElementById("loginError").innerText = "❌ Invalid Email or Password!";
+        return;
+    }
+
+    // enforce single device login
+    forceLogoutIfAlreadyLoggedIn(email);
+
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("folderListContainer").style.display = "block";
+    loadFoldersData();
+}
+
+// -------------------- ADMIN LOGIN --------------------
+function adminLogin() {
+    let code = document.getElementById("adminCode").value.trim();
+
+    if(code !== ADMIN_CODE) {
+        document.getElementById("loginError").innerText = "❌ Wrong Admin Code!";
+        return;
+    }
+
+    // admin always overrides
+    forceLogoutIfAlreadyLoggedIn("ADMIN");
+
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("folderListContainer").style.display = "block";
+    loadFoldersData();
+}
+
+// -------------------- LOAD TESTS --------------------
 function loadFoldersData() {
     fetch("manifest.json")
       .then(res => res.json())
@@ -130,7 +204,6 @@ function loadFoldersData() {
       });
 }
 
-// show folders
 function loadFolders(data) {
     let html = "";
     Object.keys(data).forEach(folder => {
@@ -141,7 +214,6 @@ function loadFolders(data) {
     document.getElementById("folderList").innerHTML = html;
 }
 
-// show tests inside folder
 function openFolder(folderName) {
     document.getElementById("selectedFolder").innerText = folderName + " – Tests";
     let tests = window.testManifest[folderName];
@@ -156,7 +228,6 @@ function openFolder(folderName) {
     document.getElementById("testList").innerHTML = html;
 }
 
-// open quiz.html with data.json
 function openTest(path) {
     window.location.href = "quiz.html?test=" + path;
 }
