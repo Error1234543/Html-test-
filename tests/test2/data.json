@@ -11,7 +11,7 @@
   ],
 
   "questions": [
-    { "number": 1,  "image": "https://i.ibb.co/20SgNdmd/x.jpg", "answer": "" },
+    { "number": 1,  "image": "https://i.ibb.co/20SgNdmd/x.jpg", "answer": "c" },
     { "number": 2,  "image": "", "answer": "" },
     { "number": 3,  "image": "", "answer": "" },
     { "number": 4,  "image": "", "answer": "" },
