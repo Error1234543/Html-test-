@@ -1,6 +1,6 @@
 {
   "title": "KRIVA Test 1 - Sample Demo",
-  
+
   "syllabus": {
     "chemistry": {
       "standard": "11th",
@@ -27,7 +27,6 @@
     { "number": 8,  "image": "", "answer": "" },
     { "number": 9,  "image": "", "answer": "" },
     { "number": 10, "image": "", "answer": "" },
-
     { "number": 11, "image": "", "answer": "" },
     { "number": 12, "image": "", "answer": "" },
     { "number": 13, "image": "", "answer": "" },
@@ -38,7 +37,6 @@
     { "number": 18, "image": "", "answer": "" },
     { "number": 19, "image": "", "answer": "" },
     { "number": 20, "image": "", "answer": "" },
-
     { "number": 21, "image": "", "answer": "" },
     { "number": 22, "image": "", "answer": "" },
     { "number": 23, "image": "", "answer": "" },
@@ -49,7 +47,6 @@
     { "number": 28, "image": "", "answer": "" },
     { "number": 29, "image": "", "answer": "" },
     { "number": 30, "image": "", "answer": "" },
-
     { "number": 31, "image": "", "answer": "" },
     { "number": 32, "image": "", "answer": "" },
     { "number": 33, "image": "", "answer": "" },
@@ -60,7 +57,6 @@
     { "number": 38, "image": "", "answer": "" },
     { "number": 39, "image": "", "answer": "" },
     { "number": 40, "image": "", "answer": "" },
-
     { "number": 41, "image": "", "answer": "" },
     { "number": 42, "image": "", "answer": "" },
     { "number": 43, "image": "", "answer": "" },
@@ -71,7 +67,6 @@
     { "number": 48, "image": "", "answer": "" },
     { "number": 49, "image": "", "answer": "" },
     { "number": 50, "image": "", "answer": "" },
-
     { "number": 51, "image": "", "answer": "" },
     { "number": 52, "image": "", "answer": "" },
     { "number": 53, "image": "", "answer": "" },
@@ -82,7 +77,6 @@
     { "number": 58, "image": "", "answer": "" },
     { "number": 59, "image": "", "answer": "" },
     { "number": 60, "image": "", "answer": "" },
-
     { "number": 61, "image": "", "answer": "" },
     { "number": 62, "image": "", "answer": "" },
     { "number": 63, "image": "", "answer": "" },
@@ -93,7 +87,6 @@
     { "number": 68, "image": "", "answer": "" },
     { "number": 69, "image": "", "answer": "" },
     { "number": 70, "image": "", "answer": "" },
-
     { "number": 71, "image": "", "answer": "" },
     { "number": 72, "image": "", "answer": "" },
     { "number": 73, "image": "", "answer": "" },
@@ -104,7 +97,6 @@
     { "number": 78, "image": "", "answer": "" },
     { "number": 79, "image": "", "answer": "" },
     { "number": 80, "image": "", "answer": "" },
-
     { "number": 81, "image": "", "answer": "" },
     { "number": 82, "image": "", "answer": "" },
     { "number": 83, "image": "", "answer": "" },
@@ -115,7 +107,6 @@
     { "number": 88, "image": "", "answer": "" },
     { "number": 89, "image": "", "answer": "" },
     { "number": 90, "image": "", "answer": "" },
-
     { "number": 91, "image": "", "answer": "" },
     { "number": 92, "image": "", "answer": "" },
     { "number": 93, "image": "", "answer": "" },
