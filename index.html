@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -77,25 +78,33 @@
         font-weight: 600;
     }
 
+    /* Top Contact/Join Links */
     #topLinks {
         text-align:center; 
-        margin-bottom:20px;
+        margin-bottom:20px; 
+        display:flex; 
+        justify-content:center; 
+        gap:20px;
     }
 
     #topLinks a {
         color:#fff; 
         text-decoration:none; 
-        margin-right:20px; 
         font-weight:600; 
         background:rgba(0,0,0,0.2); 
-        padding:8px 12px; 
-        border-radius:8px;
+        padding:10px 15px; 
+        border-radius:8px; 
+        display:inline-block;
         transition:0.3s;
     }
 
     #topLinks a:hover {
         background:rgba(255,255,255,0.3);
         color:#000;
+    }
+
+    hr {
+        border-color: rgba(255,255,255,0.3);
     }
 </style>
 
@@ -112,12 +121,14 @@
 <div id="loginForm">
     <h2>🔒 KRIVA – Login</h2>
 
+    <!-- Student Login -->
     <input type="email" id="email" placeholder="Email"><br>
     <input type="password" id="password" placeholder="Password"><br>
     <button onclick="studentLogin()">Student Login</button>
 
-    <hr style="margin:20px 0; border-color:rgba(255,255,255,0.3);">
+    <hr>
 
+    <!-- Admin Login -->
     <input type="password" id="adminCode" placeholder="Admin Code (Owner Only)"><br>
     <button onclick="adminLogin()">Admin Login</button>
 
