@@ -1,5 +1,21 @@
 {
   "title": "KRIVA Test 1 - Sample Demo",
+  
+  "syllabus": {
+    "chemistry": {
+      "standard": "11th",
+      "chapters": ["1", "2"]
+    },
+    "biology": {
+      "standard": "11th",
+      "chapters": ["8", "9", "10"]
+    },
+    "part_a": {
+      "standard": "11th",
+      "chapters": ["1", "2"]
+    }
+  },
+
   "questions": [
     { "number": 1,  "image": "", "answer": "" },
     { "number": 2,  "image": "", "answer": "" },
