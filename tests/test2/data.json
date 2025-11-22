@@ -1,71 +1,130 @@
 {
-  "title": "KRIVA ONLINE EDUCATION SERVICE - NEET 2024 KOES Test Series - 1",
-  "subject": "Physics",
-  "language": "Gujarati",
-  "total_questions": 9,
-  "questions": [
-    {
-      "qno": 1,
-      "question": "જો કોઈ એક પ્રયોગમાં A, B, C અને D ભૌતિક રાશિઓના માપમાં દેખાવતી પ્રતિશત ત્રુટિ અનુક્રમે 1%, 2%, 3% અને 4% છે. તો X ના માપમાં મહત્તમ પ્રતિશત ત્રુટિ ... હશે. જ્યાં X = (A² B¹ᐟ²)/(C D³)",
-      "image": "",
-      "options": ["9%", "16%", "10%", "12%"],
-      "answer": 2
+  "title": "KRIVA Test 1 - Sample Demo",
+  
+  "syllabus": {
+    "chemistry": {
+      "standard": "11th",
+      "chapters": ["1", "2"]
     },
-    {
-      "qno": 2,
-      "question": "જો t=0 સમયે સ્થિર સ્થિતિમાંથી શરૂ કરી, એક કણનો ટુકડો a અંતરાલમાં દોલન પથાવર્ત સરેરાશ કરે. ત્યારે t = n-1 થી t=n અંતરાલ દરમિયાન ટુકડાએ કાપેલું અંતર Sₙ છે. તો Sₙ / Sₙ₋₁ ગુણોત્તર ... હશે.",
-      "image": "",
-      "options": ["(2n-1)/(2n-3)", "(2n-1)/(2n+1)", "(2n+1)/(2n-3)", "(2n-1)/(2n+1)"],
-      "answer": 1
+    "biology": {
+      "standard": "11th",
+      "chapters": ["8", "9", "10"]
     },
-    {
-      "qno": 3,
-      "question": "મુક્ત પતન કરતા એક પદાર્થ ના પ્રથમ, દ્વિતીય, તૃતીય અને ચોથી સેકન્ડમાં કપાયેલ અંતરનો ગુણોત્તર ... હોય છે.",
-      "image": "",
-      "options": ["1:4:9:16", "1:3:5:7", "1:1:1:1", "1:2:3:4"],
-      "answer": 2
-    },
-    {
-      "qno": 4,
-      "question": "ઘનતાની તાર (0.4 ± 0.002) mm ત્રિજ્યા અને (5 ± 0.02) cm લંબાઈ ધરાવે છે. તો ઘનતાના માપમાં નિષ્ઠતમ પ્રતિશત ત્રુટિ ...% હશે. (નોંધ: દળમાં ત્રુટિ શૂન્ય ધારી છે)",
-      "image": "",
-      "options": ["1.4", "1.2", "1.3", "1.6"],
-      "answer": 1
-    },
-    {
-      "qno": 5,
-      "question": "એક પદાર્થ ઉર્ધ્વ દિશામાં ફેંકવામાં આવે છે, પૃથ્વી પર પહાડી વિસ્તારમાંથી એક નાનો બોલ (ગોલી) 4 ms⁻¹ જેટલો શિરોલંબ ઉધ્વ દિશામાં ફેંકે છે. 0.5 sec બાદ પાણીની સપાટી પર પછડાય છે. પાણીની સપાટીઓ પૃથ્વીની ઊંચાઈ ... m છે. (g=10 ms⁻²)",
-      "image": "",
-      "options": ["68", "56", "60", "64"],
-      "answer": 3
-    },
-    {
-      "qno": 6,
-      "question": "તાપમાન, વોલ્ટેજ સપ્લાયમાં ન ધારેલા ફેરફારને કારણે માપમાં ઉદ્ભવતી ત્રુટિ ... છે.",
-      "image": "",
-      "options": ["અચ્યવાતિ ત્રુટિઓ (Systematic Errors)", "સમાંગની ત્રુટિઓ", "વ્યક્તિગત ત્રુટિઓ", "લઘુતમ માપ ત્રુટિઓ"],
-      "answer": 1
-    },
-    {
-      "qno": 7,
-      "question": "પ્લાન્ક અચળાંક (h), શૂન્યાવકાશમાં પ્રકાશની ઝડપ (c) અને ન્યૂટનનો ગુરુત્વાકર્ષણ અચળાંક (G) એ ત્રણ મૂળભૂત ગુણાકાર છે. નીચેનામાંથી કયું સંયોજન લંબાઈના પરિમાણ જેવું છે?",
-      "image": "",
-      "options": ["√(h c³/G)", "√(G c³/h)", "√(h G/c³)", "√(G h/c³)"],
-      "answer": 4
-    },
-    {
-      "qno": 8,
-      "question": "1'' (એક આર્ક સેકન્ડ) નું ખૂણિયાનું મૂલ્ય રેડિયનમાં મેળવો.",
-      "image": "",
-      "options": ["1.75 x 10⁻² rad", "2.91 x 10⁻⁴ rad", "4.85 x 10⁻⁶ rad", "4.80 x 10⁻⁶ rad"],
-      "answer": 3
-    },
-    {
-      "qno": 9,
-      "question": "X-અક્ષ સાથે 30° અને 45° નો કોણ સાથે ગતિ કરતી બે કણોના વેગને સ્થાન-સમયના આલેખોમાં દર્શાવ્યા છે. તેઓનાં અનુક્રમે વેગનો ગુણોત્તર ... હશે.",
-      "image": "displacement_time_graph_angles.png",
-      "options": ["1:1", "1:√2", "1:√3", "√3:1"],
-      "answer": 4
+    "part_a": {
+      "standard": "11th",
+      "chapters": ["1", "2"]
     }
+  },
+
+  "questions": [
+    { "number": 1,  "image": "", "answer": "" },
+    { "number": 2,  "image": "", "answer": "" },
+    { "number": 3,  "image": "", "answer": "" },
+    { "number": 4,  "image": "", "answer": "" },
+    { "number": 5,  "image": "", "answer": "" },
+    { "number": 6,  "image": "", "answer": "" },
+    { "number": 7,  "image": "", "answer": "" },
+    { "number": 8,  "image": "", "answer": "" },
+    { "number": 9,  "image": "", "answer": "" },
+    { "number": 10, "image": "", "answer": "" },
+
+    { "number": 11, "image": "", "answer": "" },
+    { "number": 12, "image": "", "answer": "" },
+    { "number": 13, "image": "", "answer": "" },
+    { "number": 14, "image": "", "answer": "" },
+    { "number": 15, "image": "", "answer": "" },
+    { "number": 16, "image": "", "answer": "" },
+    { "number": 17, "image": "", "answer": "" },
+    { "number": 18, "image": "", "answer": "" },
+    { "number": 19, "image": "", "answer": "" },
+    { "number": 20, "image": "", "answer": "" },
+
+    { "number": 21, "image": "", "answer": "" },
+    { "number": 22, "image": "", "answer": "" },
+    { "number": 23, "image": "", "answer": "" },
+    { "number": 24, "image": "", "answer": "" },
+    { "number": 25, "image": "", "answer": "" },
+    { "number": 26, "image": "", "answer": "" },
+    { "number": 27, "image": "", "answer": "" },
+    { "number": 28, "image": "", "answer": "" },
+    { "number": 29, "image": "", "answer": "" },
+    { "number": 30, "image": "", "answer": "" },
+
+    { "number": 31, "image": "", "answer": "" },
+    { "number": 32, "image": "", "answer": "" },
+    { "number": 33, "image": "", "answer": "" },
+    { "number": 34, "image": "", "answer": "" },
+    { "number": 35, "image": "", "answer": "" },
+    { "number": 36, "image": "", "answer": "" },
+    { "number": 37, "image": "", "answer": "" },
+    { "number": 38, "image": "", "answer": "" },
+    { "number": 39, "image": "", "answer": "" },
+    { "number": 40, "image": "", "answer": "" },
+
+    { "number": 41, "image": "", "answer": "" },
+    { "number": 42, "image": "", "answer": "" },
+    { "number": 43, "image": "", "answer": "" },
+    { "number": 44, "image": "", "answer": "" },
+    { "number": 45, "image": "", "answer": "" },
+    { "number": 46, "image": "", "answer": "" },
+    { "number": 47, "image": "", "answer": "" },
+    { "number": 48, "image": "", "answer": "" },
+    { "number": 49, "image": "", "answer": "" },
+    { "number": 50, "image": "", "answer": "" },
+
+    { "number": 51, "image": "", "answer": "" },
+    { "number": 52, "image": "", "answer": "" },
+    { "number": 53, "image": "", "answer": "" },
+    { "number": 54, "image": "", "answer": "" },
+    { "number": 55, "image": "", "answer": "" },
+    { "number": 56, "image": "", "answer": "" },
+    { "number": 57, "image": "", "answer": "" },
+    { "number": 58, "image": "", "answer": "" },
+    { "number": 59, "image": "", "answer": "" },
+    { "number": 60, "image": "", "answer": "" },
+
+    { "number": 61, "image": "", "answer": "" },
+    { "number": 62, "image": "", "answer": "" },
+    { "number": 63, "image": "", "answer": "" },
+    { "number": 64, "image": "", "answer": "" },
+    { "number": 65, "image": "", "answer": "" },
+    { "number": 66, "image": "", "answer": "" },
+    { "number": 67, "image": "", "answer": "" },
+    { "number": 68, "image": "", "answer": "" },
+    { "number": 69, "image": "", "answer": "" },
+    { "number": 70, "image": "", "answer": "" },
+
+    { "number": 71, "image": "", "answer": "" },
+    { "number": 72, "image": "", "answer": "" },
+    { "number": 73, "image": "", "answer": "" },
+    { "number": 74, "image": "", "answer": "" },
+    { "number": 75, "image": "", "answer": "" },
+    { "number": 76, "image": "", "answer": "" },
+    { "number": 77, "image": "", "answer": "" },
+    { "number": 78, "image": "", "answer": "" },
+    { "number": 79, "image": "", "answer": "" },
+    { "number": 80, "image": "", "answer": "" },
+
+    { "number": 81, "image": "", "answer": "" },
+    { "number": 82, "image": "", "answer": "" },
+    { "number": 83, "image": "", "answer": "" },
+    { "number": 84, "image": "", "answer": "" },
+    { "number": 85, "image": "", "answer": "" },
+    { "number": 86, "image": "", "answer": "" },
+    { "number": 87, "image": "", "answer": "" },
+    { "number": 88, "image": "", "answer": "" },
+    { "number": 89, "image": "", "answer": "" },
+    { "number": 90, "image": "", "answer": "" },
+
+    { "number": 91, "image": "", "answer": "" },
+    { "number": 92, "image": "", "answer": "" },
+    { "number": 93, "image": "", "answer": "" },
+    { "number": 94, "image": "", "answer": "" },
+    { "number": 95, "image": "", "answer": "" },
+    { "number": 96, "image": "", "answer": "" },
+    { "number": 97, "image": "", "answer": "" },
+    { "number": 98, "image": "", "answer": "" },
+    { "number": 99, "image": "", "answer": "" },
+    { "number": 100, "image": "", "answer": "" }
   ]
 }
