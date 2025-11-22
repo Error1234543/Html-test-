@@ -2,17 +2,17 @@
   "title": "KRIVA Test 1 - Sample Demo",
   "questions": [
     {
-      "no": 1,
+      "id": 1,
       "image": "https://i.ibb.co/FLMpP7Sx/x.jpg",
       "answer": "B"
     },
     {
-      "no": 2,
+      "id": 2,
       "image": "https://i.ibb.co/20SgNdmd/x.jpg",
       "answer": "A"
     },
     {
-      "no": 3,
+      "id": 3,
       "image": "https://i.imgur.com/wt7q6FJ.jpeg",
       "answer": "D"
     }
