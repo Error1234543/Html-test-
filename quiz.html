@@ -1,231 +1,97 @@
 <!DOCTYPE html>
-<html lang="gu">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA Ultra Pro Max Test</title>
-
-    <style>
-        body {
-            font-family: Poppins, sans-serif;
-            background: #f2f5ff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            box-shadow: 0 0 25px rgba(0,0,0,0.12);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 28px;
-            font-weight: 700;
-            color: #222;
-        }
-
-        .syllabus-box {
-            background: #eef1ff;
-            padding: 15px;
-            border-radius: 14px;
-            margin-bottom: 25px;
-            border-left: 6px solid #4a5cff;
-        }
-
-        .syllabus-box h2 {
-            margin: 0 0 10px 0;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .syllabus-box ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .syllabus-box li {
-            margin: 4px 0;
-        }
-
-        .question-card {
-            background: #ffffff;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 14px;
-            border: 1px solid #d7dcff;
-        }
-
-        .question-number {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        .question-card img {
-            width: 100%;
-            border-radius: 14px;
-            margin-bottom: 15px;
-            background: #ddd;
-        }
-
-        .options div {
-            padding: 12px;
-            background: #f6f7ff;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 1px solid #c8ceff;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .options div:hover {
-            background: #dfe3ff;
-        }
-
-        .correct {
-            background: #b2ffb2 !important;
-            border-color: #4CAF50 !important;
-        }
-
-        .wrong {
-            background: #ffb2b2 !important;
-            border-color: #ff2e2e !important;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 14px;
-            border: none;
-            background: #4a5cff;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        .submit-btn:hover {
-            background:#3948ff;
-        }
-
-        .result-box {
-            background:#e8ebff;
-            padding:20px;
-            border-radius:14px;
-            margin-top:20px;
-            display:none;
-        }
-
-        .result-box h2 {
-            margin:0;
-            color:#000a88;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KRIVA Quiz</title>
+<style>
+  body { font-family: Poppins, sans-serif; background: #f1f3ff; margin:0; padding:20px; }
+  h1 { text-align:center; color:#333; }
+  #syllabusList { margin-bottom:20px; padding-left:20px; }
+  .question { margin-bottom:20px; padding:10px; background:#fff; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+  .question img { max-width:100%; margin:10px 0; }
+  .options { list-style:none; padding:0; }
+  .options li { margin:5px 0; }
+  .submit-btn { display:block; margin:20px auto; padding:10px 20px; font-size:16px; background:#4CAF50; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+  .submit-btn:hover { background:#45a049; }
+  #result { margin-top:20px; font-size:18px; font-weight:bold; text-align:center; }
+</style>
 </head>
-
 <body>
 
-<div class="container">
+<h1 id="testTitle">Loading Test...</h1>
 
-    <h1 id="testTitle">Loading...</h1>
+<h2>Syllabus</h2>
+<ul id="syllabusList"></ul>
 
-    <div class="syllabus-box">
-        <h2>📘 Syllabus</h2>
-        <ul id="syllabusList"></ul>
-    </div>
+<div id="questionsContainer"></div>
 
-    <div id="quizArea"></div>
+<button class="submit-btn" onclick="calculateResult()">Submit</button>
 
-    <button class="submit-btn" onclick="showResult()">Submit Test</button>
-
-    <div class="result-box" id="resultBox"></div>
-
-</div>
-
+<div id="result"></div>
 
 <script>
-let quizData = [];
-let userAnswer = {};
+let quizData = {};
+let userAnswers = {};
 
-async function loadJSON() {
-    const res = await fetch("tests/TEST1/data.json");
-    quizData = await res.json();
+async function loadQuiz() {
+  const res = await fetch("tests/TEST1/data.json");
+  quizData = await res.json();
 
-    document.getElementById("testTitle").innerText = quizData.title;
+  document.getElementById("testTitle").innerText = quizData.title;
 
-    // Load syllabus
-    const syllabusList = document.getElementById("syllabusList");
-    quizData.syllabus.forEach(item => {
-        syllabusList.innerHTML += `<li>${item}</li>`;
-    });
+  // Load syllabus
+  const syllabusList = document.getElementById("syllabusList");
+  quizData.syllabus.forEach(chap => {
+    const li = document.createElement("li");
+    li.innerText = chap;
+    syllabusList.appendChild(li);
+  });
 
-    loadQuestions();
-}
-
-function loadQuestions() {
-    const area = document.getElementById("quizArea");
-    area.innerHTML = "";
-
-    quizData.questions.forEach((q, index) => {
-        const card = document.createElement("div");
-        card.className = "question-card";
-
-        card.innerHTML = `
-            <div class="question-number">Q${q.number}</div>
-            <img src="${q.image}" alt="Question Image">
-
-            <div class="options" id="opt-${index}">
-                <div onclick="selectOption(${index}, 'A')">A</div>
-                <div onclick="selectOption(${index}, 'B')">B</div>
-                <div onclick="selectOption(${index}, 'C')">C</div>
-                <div onclick="selectOption(${index}, 'D')">D</div>
-            </div>
-        `;
-
-        area.appendChild(card);
-    });
-}
-
-function selectOption(qIndex, opt) {
-    userAnswer[qIndex] = opt;
-
-    const optionDivs = document.querySelectorAll(`#opt-${qIndex} div`);
-    optionDivs.forEach(d => d.style.background = "#f6f7ff");
-
-    document.querySelector(`#opt-${qIndex} div:nth-child(${opt.charCodeAt(0)-64})`).style.background = "#d1d6ff";
-}
-
-function showResult() {
-    let correct = 0;
-
-    quizData.questions.forEach((q, i) => {
-        const divs = document.querySelectorAll(`#opt-${i} div`);
-
-        divs.forEach(d => d.classList.remove("correct","wrong"));
-
-        if (userAnswer[i] === q.answer) {
-            correct++;
-            divs[q.answer.charCodeAt(0)-65].classList.add("correct");
-        } else if (userAnswer[i]) {
-            divs[userAnswer[i].charCodeAt(0)-65].classList.add("wrong");
-        }
-    });
-
-    document.getElementById("resultBox").style.display = "block";
-    document.getElementById("resultBox").innerHTML = `
-        <h2>Result</h2>
-        <p><b>Correct:</b> ${correct}</p>
-        <p><b>Wrong:</b> ${quizData.questions.length - correct}</p>
-        <p><b>Total Questions:</b> ${quizData.questions.length}</p>
+  // Load questions
+  const container = document.getElementById("questionsContainer");
+  quizData.questions.forEach(q => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "question";
+    qDiv.innerHTML = `
+      <p><b>Q${q.number}:</b></p>
+      ${q.image ? `<img src="${q.image}" alt="Question ${q.number}">` : ""}
+      <ul class="options">
+        <li><input type="radio" name="q${q.number}" value="A"> Option A</li>
+        <li><input type="radio" name="q${q.number}" value="B"> Option B</li>
+        <li><input type="radio" name="q${q.number}" value="C"> Option C</li>
+        <li><input type="radio" name="q${q.number}" value="D"> Option D</li>
+      </ul>
     `;
+    container.appendChild(qDiv);
+  });
 }
 
-loadJSON();
+function calculateResult() {
+  let correct = 0;
+  let wrong = 0;
+
+  quizData.questions.forEach(q => {
+    const radios = document.getElementsByName("q" + q.number);
+    let answered = false;
+    radios.forEach(r => {
+      if (r.checked) {
+        answered = true;
+        if (q.answer && r.value === q.answer) {
+          correct++;
+        } else {
+          wrong++;
+        }
+      }
+    });
+    if (!answered) wrong++;
+  });
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.innerHTML = `Correct: ${correct} | Wrong: ${wrong}`;
+}
+
+loadQuiz();
 </script>
 
 </body>
