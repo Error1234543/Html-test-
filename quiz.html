@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="gu">
 <head>
@@ -25,10 +26,22 @@
 
     h2.title {
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         font-size: 26px;
         font-weight: 700;
-        letter-spacing: .5px;
+    }
+
+    /* ---------------- SYLLABUS BOX ---------------- */
+    .syllabusBox {
+        background: rgba(255,255,255,0.20);
+        padding: 15px;
+        border-radius: 14px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(6px);
+        border-left: 6px solid rgba(255,255,255,0.6);
+        font-size: 16px;
+        line-height: 1.5;
+        white-space: pre-line;
     }
 
     .question-box {
@@ -125,6 +138,9 @@
 <div class="container">
     <h2 class="title" id="testTitle">Loading Test...</h2>
 
+    <!-- Syllabus Box -->
+    <div class="syllabusBox" id="syllabusBox" style="display:none;"></div>
+
     <div id="quizArea"></div>
 
     <button id="submitBtn" onclick="submitTest()">SUBMIT TEST</button>
@@ -149,7 +165,15 @@ fetch(testPath)
   .then(res => res.json())
   .then(data => {
       testData = data;
+
       document.getElementById("testTitle").innerText = data.title;
+
+      // SHOW SYLLABUS
+      if (data.syllabus && data.syllabus.trim() !== "") {
+          document.getElementById("syllabusBox").style.display = "block";
+          document.getElementById("syllabusBox").innerText = data.syllabus;
+      }
+
       loadQuestions(data.questions);
   });
 
@@ -171,17 +195,14 @@ function loadQuestions(qList) {
             <div id="q${i}_B" class="option" onclick="selectOption(${i}, 'B')">B</div>
             <div id="q${i}_C" class="option" onclick="selectOption(${i}, 'C')">C</div>
             <div id="q${i}_D" class="option" onclick="selectOption(${i}, 'D')">D</div>
-        </div>
-        `;
+        </div>`;
     });
 
     document.getElementById("quizArea").innerHTML = html;
 }
 
 
-// ----------------------------------------------------------------------------
-// SELECT OPTION
-// ----------------------------------------------------------------------------
+// ---------------- SELECT OPTION ----------------
 
 function selectOption(qIndex, optionKey) {
     if (submitted) return;
@@ -195,9 +216,7 @@ function selectOption(qIndex, optionKey) {
 }
 
 
-// ----------------------------------------------------------------------------
-// SUBMIT TEST
-// ----------------------------------------------------------------------------
+// ---------------- SUBMIT TEST ----------------
 
 function submitTest() {
     submitted = true;
@@ -210,8 +229,6 @@ function submitTest() {
         let selected = userAnswer[i];
 
         let correctOption = document.getElementById(`q${i}_${correctAns}`);
-
-        // Mark correct ans green
         correctOption.classList.add("correct");
 
         if (selected) {
