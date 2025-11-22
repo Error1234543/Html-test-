@@ -77,9 +77,9 @@ fetch("manifest.json")
 function loadFolders(data) {
     let html = "";
     Object.keys(data).forEach(folder => {
-        html += <div class="folder" onclick="openFolder('${folder}')">
+        html += `<div class="folder" onclick="openFolder('${folder}')">
                     📂 ${folder}
-                 </div>;
+                 </div>`;
     });
     document.getElementById("folderList").innerHTML = html;
 }
@@ -91,9 +91,9 @@ function openFolder(folderName) {
 
     let html = "";
     tests.forEach(test => {
-        html += <div class="test" onclick="openTest('${test.file}')">
+        html += `<div class="test" onclick="openTest('${test.file}')">
                     📝 ${test.name}
-                 </div>;
+                 </div>`;
     });
 
     document.getElementById("testList").innerHTML = html;
