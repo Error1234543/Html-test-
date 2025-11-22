@@ -4,235 +4,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KRIVA Ultra Pro Max Quiz</title>
+    <title>KRIVA Ultra Pro Max Test</title>
 
     <style>
         body {
             font-family: Poppins, sans-serif;
-            background: #eef2ff;
+            background: #f2f5ff;
             margin: 0;
             padding: 0;
         }
 
         .container {
             max-width: 900px;
-            margin: auto;
-            padding: 20px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.12);
         }
 
         h1 {
             text-align: center;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 10px;
+            color: #222;
         }
 
         .syllabus-box {
-            background: white;
+            background: #eef1ff;
             padding: 15px;
             border-radius: 14px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border-left: 6px solid #4a5cff;
         }
 
-        .syllabus-title {
-            font-weight: 700;
-            margin-bottom: 8px;
+        .syllabus-box h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
             color: #333;
         }
 
-        .question-box {
-            background: white;
-            padding: 15px;
+        .question-card {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px 0;
             border-radius: 14px;
-            margin-bottom: 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+            border: 1px solid #d7dcff;
         }
 
         .question-number {
+            font-size: 20px;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .question-box img {
-            width: 100%;
-            border-radius: 12px;
             margin-bottom: 12px;
         }
 
-        .option {
-            padding: 12px;
-            margin: 8px 0;
-            background: #f7f7ff;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 15px;
-            border: 2px solid transparent;
+        .question-card img {
+            width: 100%;
+            border-radius: 14px;
+            margin-bottom: 15px;
         }
 
-        .option.selected {
-            border: 2px solid #333;
-            background: #e0e0ff;
+        .options div {
+            padding: 12px;
+            background: #f6f7ff;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #c8ceff;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .options div:hover {
+            background: #dfe3ff;
+        }
+
+        .correct {
+            background: #b2ffb2 !important;
+            border-color: #4CAF50 !important;
+        }
+
+        .wrong {
+            background: #ffb2b2 !important;
+            border-color: #ff2e2e !important;
         }
 
         .submit-btn {
             width: 100%;
             padding: 15px;
-            font-size: 18px;
+            border-radius: 14px;
             border: none;
-            border-radius: 12px;
-            background: #4b4bff;
+            background: #4a5cff;
             color: white;
+            font-size: 18px;
             cursor: pointer;
             margin-top: 20px;
-            font-weight: 600;
+        }
+
+        .submit-btn:hover {
+            background:#3948ff;
         }
 
         .result-box {
-            background: white;
-            padding: 20px;
-            border-radius: 14px;
-            margin-top: 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+            background:#e8ebff;
+            padding:20px;
+            border-radius:14px;
+            margin-top:20px;
+            display:none;
         }
 
-        .correct { color: green; font-weight: 700; }
-        .wrong { color: red; font-weight: 700; }
+        .result-box h2 {
+            margin:0;
+            color:#000a88;
+        }
     </style>
-
 </head>
+
 <body>
 
 <div class="container">
+
     <h1 id="testTitle">Loading...</h1>
 
-    <!-- Syllabus -->
-    <div id="syllabusBox" class="syllabus-box"></div>
+    <div class="syllabus-box">
+        <h2>📘 Syllabus</h2>
+        <p><b>Chemistry (Std 11)</b>: CH 1,2</p>
+        <p><b>Biology (Std 11)</b>: CH 8,9,10</p>
+        <p><b>PART - A (Std 11)</b>: CH 1,2</p>
+    </div>
 
-    <!-- Questions -->
-    <div id="questions"></div>
+    <div id="quizArea"></div>
 
     <button class="submit-btn" onclick="showResult()">Submit Test</button>
 
-    <!-- Result -->
-    <div id="result" class="result-box" style="display:none;"></div>
+    <div class="result-box" id="resultBox"></div>
+
 </div>
 
+
 <script>
-    // Load JSON
-    fetch("data.json")
-        .then(res => res.json())
-        .then(data => loadTest(data));
+let quizData = [];
+let userAnswer = {};
 
-    let userAnswers = {};
+async function loadJSON() {
+    const res = await fetch("tests/TEST1/data.json");
+    quizData = await res.json();
 
-    function loadTest(data) {
+    document.getElementById("testTitle").innerText = quizData.title;
 
-        // Title
-        document.getElementById("testTitle").innerText = data.title;
+    loadQuestions();
+}
 
-        // ---------------------------
-        // SYLLABUS
-        // ---------------------------
-        let s = data.syllabus;
+function loadQuestions() {
+    const area = document.getElementById("quizArea");
+    area.innerHTML = "";
 
-        let syllabusHTML = `
-            <div class='syllabus-title'>📘 Syllabus</div>
+    quizData.questions.forEach((q, index) => {
+        const card = document.createElement("div");
+        card.className = "question-card";
 
-            <b>Chemistry (Std - ${s.chemistry.standard}) :</b> 
-            ${s.chemistry.chapters.join(", ")}<br><br>
+        card.innerHTML = `
+            <div class="question-number">Q${q.number}</div>
+            <img src="${q.image}" alt="Question Image">
 
-            <b>Biology (Std - ${s.biology.standard}) :</b>
-            ${s.biology.chapters.join(", ")}<br><br>
-
-            <b>Part A (Std - ${s.part_a.standard}) :</b>
-            ${s.part_a.chapters.join(", ")}
+            <div class="options" id="opt-${index}">
+                <div onclick="selectOption(${index}, 'A')">A</div>
+                <div onclick="selectOption(${index}, 'B')">B</div>
+                <div onclick="selectOption(${index}, 'C')">C</div>
+                <div onclick="selectOption(${index}, 'D')">D</div>
+            </div>
         `;
 
-        document.getElementById("syllabusBox").innerHTML = syllabusHTML;
+        area.appendChild(card);
+    });
+}
 
-        // ---------------------------
-        // QUESTIONS
-        // ---------------------------
-        let qBox = document.getElementById("questions");
-        qBox.innerHTML = "";
+function selectOption(qIndex, opt) {
+    userAnswer[qIndex] = opt;
 
-        data.questions.forEach(q => {
+    const optionDivs = document.querySelectorAll(`#opt-${qIndex} div`);
+    optionDivs.forEach(d => d.style.background = "#f6f7ff");
 
-            let imgHTML = q.image !== "" ? `<img src="${q.image}" alt="Question Image">` : "";
+    document.querySelector(`#opt-${qIndex} div:nth-child(${opt.charCodeAt(0)-64})`).style.background = "#d1d6ff";
+}
 
-            let qHTML = `
-                <div class="question-box">
-                    <div class="question-number">Question ${q.number}</div>
-                    ${imgHTML}
+function showResult() {
+    let correct = 0;
 
-                    <div class="option" onclick="selectOption(${q.number}, 'A')">A</div>
-                    <div class="option" onclick="selectOption(${q.number}, 'B')">B</div>
-                    <div class="option" onclick="selectOption(${q.number}, 'C')">C</div>
-                    <div class="option" onclick="selectOption(${q.number}, 'D')">D</div>
-                </div>
-            `;
+    quizData.questions.forEach((q, i) => {
+        const divs = document.querySelectorAll(`#opt-${i} div`);
 
-            qBox.innerHTML += qHTML;
-        });
-    }
+        divs.forEach(d => d.classList.remove("correct","wrong"));
 
-    // ---------------------------
-    // SELECT OPTION
-    // ---------------------------
-    function selectOption(qNo, option) {
-        userAnswers[qNo] = option;
+        if (userAnswer[i] === q.answer) {
+            correct++;
+            divs[q.answer.charCodeAt(0)-65].classList.add("correct");
+        } else if (userAnswer[i]) {
+            divs[userAnswer[i].charCodeAt(0)-65].classList.add("wrong");
+        }
+    });
 
-        let box = document.querySelectorAll(".question-box")[qNo - 1];
-        box.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+    document.getElementById("resultBox").style.display = "block";
+    document.getElementById("resultBox").innerHTML = `
+        <h2>Result</h2>
+        <p><b>Correct:</b> ${correct}</p>
+        <p><b>Wrong:</b> ${quizData.questions.length - correct}</p>
+        <p><b>Total Questions:</b> ${quizData.questions.length}</p>
+    `;
+}
 
-        box.querySelectorAll(".option").forEach(o => {
-            if (o.innerText === option) o.classList.add("selected");
-        });
-    }
-
-    // ---------------------------
-    // RESULT
-    // ---------------------------
-    function showResult() {
-
-        fetch("data.json")
-            .then(res => res.json())
-            .then(data => {
-
-                let correct = 0;
-                let wrong = 0;
-
-                let details = "";
-
-                data.questions.forEach(q => {
-
-                    let uAns = userAnswers[q.number] || "—";
-                    let right = q.answer || "—";
-
-                    if (uAns === right) correct++;
-                    else wrong++;
-
-                    details += `
-                        Q${q.number}: 
-                        Your Ans: <b class="${uAns === right ? 'correct' : 'wrong'}">${uAns}</b> 
-                        | Correct: <b>${right}</b><br>
-                    `;
-                });
-
-                let res = document.getElementById("result");
-                res.style.display = "block";
-                res.innerHTML = `
-                    <h2>Result</h2>
-                    <p>Correct: <b class="correct">${correct}</b></p>
-                    <p>Wrong: <b class="wrong">${wrong}</b></p>
-                    <hr>
-                    ${details}
-                `;
-
-                window.scrollTo(0, document.body.scrollHeight);
-            });
-    }
+loadJSON();
 </script>
 
 </body>
