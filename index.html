@@ -24,10 +24,6 @@
         letter-spacing: 1px;
     }
 
-    #folderList, #testList {
-        margin-top: 20px;
-    }
-
     .folder, .test {
         background: rgba(255,255,255,0.15);
         padding: 18px;
@@ -53,9 +49,58 @@
         font-size: 22px;
         font-weight: 600;
     }
-</style>
 
+    /* PREMIUM PASSWORD POPUP */
+    #passwordOverlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(6px);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    #passwordBox {
+        background: #ffffff;
+        padding: 30px;
+        width: 85%;
+        max-width: 350px;
+        border-radius: 18px;
+        text-align: center;
+        color: #000;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+
+    #passwordBox input {
+        width: 90%;
+        padding: 12px;
+        margin-top: 12px;
+        font-size: 17px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+    }
+
+    #passwordBox button {
+        margin-top: 15px;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 12px;
+        background: #4b6bff;
+        color: #fff;
+        cursor: pointer;
+        width: 90%;
+    }
+
+    #passwordBox button:hover {
+        background: #6b80ff;
+    }
+</style>
 </head>
+
 <body>
 
 <h2>📁 KRIVA – Select Test Category</h2>
@@ -65,7 +110,19 @@
 <h2 id="selectedFolder"></h2>
 <div id="testList"></div>
 
+<!-- PREMIUM PASSWORD POPUP -->
+<div id="passwordOverlay">
+  <div id="passwordBox">
+      <h3 id="pwTitle">Enter Password</h3>
+      <input type="password" id="pwInput" placeholder="Password">
+      <button onclick="submitPassword()">Unlock</button>
+      <button style="background:#999;margin-top:8px" onclick="closePopup()">Cancel</button>
+  </div>
+</div>
+
 <script>
+let currentFolder = null;
+
 fetch("manifest.json")
   .then(res => res.json())
   .then(data => {
@@ -73,43 +130,60 @@ fetch("manifest.json")
       loadFolders(data);
   });
 
-// show folders
+// load folders
 function loadFolders(data) {
     let html = "";
     Object.keys(data).forEach(folder => {
-        html += `<div class="folder" onclick="openFolder('${folder}')">
-                    📂 ${folder}
-                 </div>`;
+        html += `<div class="folder" onclick="askPassword('${folder}')">📂 ${folder}</div>`;
     });
     document.getElementById("folderList").innerHTML = html;
 }
 
-// show tests inside folder with password check
-function openFolder(folderName) {
+function askPassword(folderName) {
     let folderData = window.testManifest[folderName];
 
-    // check if folder has a password
-    if(folderData.password) {
-        let pwd = prompt(`Enter password for "${folderName}"`);
-        if(pwd !== folderData.password) {
-            alert("Incorrect password ❌");
-            return;
-        }
-    }
+    currentFolder = folderName;
 
+    if(folderData.password){
+        document.getElementById("pwTitle").innerText =
+            `🔐 ${folderName}`;
+        document.getElementById("passwordOverlay").style.display = "flex";
+    } else {
+        openFolder(folderName);
+    }
+}
+
+// password popup close
+function closePopup(){
+    document.getElementById("passwordOverlay").style.display = "none";
+    document.getElementById("pwInput").value = "";
+}
+
+// password submit
+function submitPassword(){
+    let input = document.getElementById("pwInput").value;
+    let correct = window.testManifest[currentFolder].password;
+
+    if(input === correct){
+        closePopup();
+        openFolder(currentFolder);
+    } else {
+        alert("Incorrect Password ❌");
+    }
+}
+
+// open selected folder
+function openFolder(folderName) {
+    let data = window.testManifest[folderName];
     document.getElementById("selectedFolder").innerText = folderName + " – Tests";
 
     let html = "";
-    folderData.tests.forEach(test => {
-        html += `<div class="test" onclick="openTest('${test.file}')">
-                    📝 ${test.name}
-                 </div>`;
+    data.tests.forEach(test => {
+        html += `<div class="test" onclick="openTest('${test.file}')">📝 ${test.name}</div>`;
     });
-
     document.getElementById("testList").innerHTML = html;
 }
 
-// open quiz.html with data.json
 function openTest(path) {
     window.location.href = "quiz.html?test=" + path;
 }
