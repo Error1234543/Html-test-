@@ -84,13 +84,23 @@ function loadFolders(data) {
     document.getElementById("folderList").innerHTML = html;
 }
 
-// show tests inside folder
+// show tests inside folder with password check
 function openFolder(folderName) {
+    let folderData = window.testManifest[folderName];
+
+    // check if folder has a password
+    if(folderData.password) {
+        let pwd = prompt(`Enter password for "${folderName}"`);
+        if(pwd !== folderData.password) {
+            alert("Incorrect password ❌");
+            return;
+        }
+    }
+
     document.getElementById("selectedFolder").innerText = folderName + " – Tests";
-    let tests = window.testManifest[folderName];
 
     let html = "";
-    tests.forEach(test => {
+    folderData.tests.forEach(test => {
         html += `<div class="test" onclick="openTest('${test.file}')">
                     📝 ${test.name}
                  </div>`;
