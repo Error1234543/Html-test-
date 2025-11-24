@@ -74,6 +74,14 @@
         box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     }
 
+    /* **नया स्टाइल** एरर मैसेज के लिए */
+    #pwError {
+        color: #ff3333; /* लाल रंग */
+        margin-bottom: 10px;
+        font-weight: 600;
+        min-height: 1.2em; /* जगह बनाए रखने के लिए */
+    }
+
     #passwordBox input {
         width: 90%;
         padding: 12px;
@@ -110,10 +118,10 @@
 <h2 id="selectedFolder"></h2>
 <div id="testList"></div>
 
-<!-- PREMIUM PASSWORD POPUP -->
 <div id="passwordOverlay">
   <div id="passwordBox">
       <h3 id="pwTitle">Enter Password</h3>
+      <div id="pwError"></div> 
       <input type="password" id="pwInput" placeholder="Password">
       <button onclick="submitPassword()">Unlock</button>
       <button style="background:#999;margin-top:8px" onclick="closePopup()">Cancel</button>
@@ -123,17 +131,20 @@
 <script>
 let currentFolder = null;
 
+// NOTE: यह कोड मानकर चलता है कि आपकी manifest.json फ़ाइल उसी फोल्डर में मौजूद है।
 fetch("manifest.json")
   .then(res => res.json())
   .then(data => {
       window.testManifest = data;
       loadFolders(data);
-  });
+  })
+  .catch(error => console.error("Error loading manifest.json:", error));
 
 // load folders
 function loadFolders(data) {
     let html = "";
     Object.keys(data).forEach(folder => {
+        // सुनिश्चित करें कि आप फोल्डर नेम पास कर रहे हैं, न कि ऑब्जेक्ट
         html += `<div class="folder" onclick="askPassword('${folder}')">📂 ${folder}</div>`;
     });
     document.getElementById("folderList").innerHTML = html;
@@ -144,9 +155,11 @@ function askPassword(folderName) {
 
     currentFolder = folderName;
 
-    if(folderData.password){
+    if(folderData && folderData.password){
         document.getElementById("pwTitle").innerText =
             `🔐 ${folderName}`;
+        // ✅ पॉपअप खोलते समय सुनिश्चित करें कि पिछला एरर मैसेज हट जाए
+        document.getElementById("pwError").innerText = ""; 
         document.getElementById("passwordOverlay").style.display = "flex";
     } else {
         openFolder(folderName);
@@ -157,18 +170,25 @@ function askPassword(folderName) {
 function closePopup(){
     document.getElementById("passwordOverlay").style.display = "none";
     document.getElementById("pwInput").value = "";
+    // ✅ पॉपअप बंद होने पर एरर मैसेज हटा दें
+    document.getElementById("pwError").innerText = ""; 
 }
 
 // password submit
 function submitPassword(){
     let input = document.getElementById("pwInput").value;
-    let correct = window.testManifest[currentFolder].password;
+    // सुनिश्चित करें कि currentFolder का डेटा मौजूद है
+    let correct = window.testManifest[currentFolder] ? window.testManifest[currentFolder].password : null;
+    let errorElement = document.getElementById("pwError");
 
-    if(input === correct){
+    if(input === correct && correct !== null){
+        // पासवर्ड सही है
+        errorElement.innerText = "";
         closePopup();
         openFolder(currentFolder);
     } else {
-        alert("Incorrect Password ❌");
+        // ✅ पासवर्ड गलत है। alert() की जगह कस्टम मैसेज दिखाएं।
+        errorElement.innerText = "Incorrect Password ❌";
     }
 }
 
@@ -178,13 +198,19 @@ function openFolder(folderName) {
     document.getElementById("selectedFolder").innerText = folderName + " – Tests";
 
     let html = "";
-    data.tests.forEach(test => {
-        html += `<div class="test" onclick="openTest('${test.file}')">📝 ${test.name}</div>`;
-    });
+    if (data && data.tests) {
+        data.tests.forEach(test => {
+            html += `<div class="test" onclick="openTest('${test.file}')">📝 ${test.name}</div>`;
+        });
+    } else {
+        html = "<p style='text-align:center; color:#fff;'>No tests found in this category.</p>";
+    }
+    
     document.getElementById("testList").innerHTML = html;
 }
 
 function openTest(path) {
+    // मान लें कि quiz.html फ़ाइल उसी फोल्डर में है
     window.location.href = "quiz.html?test=" + path;
 }
 </script>
